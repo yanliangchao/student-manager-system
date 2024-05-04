@@ -102,10 +102,10 @@ const openDialog = (type: string, row: ClassType) => {
 		nextTick(() => {
 			state.ruleForm = JSON.parse(JSON.stringify(row));
 		});
-		state.dialog.title = '修改用户';
+		state.dialog.title = '修改班级';
 		state.dialog.submitTxt = '修 改';
 	} else {
-		state.dialog.title = '新增用户';
+		state.dialog.title = '新增班级';
 		state.dialog.submitTxt = '新 增';
 		// 清空表单，此项需加表单验证才能使用
 		nextTick(() => {
