@@ -77,7 +77,7 @@ const state = reactive({
 
 const rules = reactive<FormRules<TeacherType>>({
 	name: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input name', trigger: 'blur' },
 	],
 	sid: [
 		{ required: true, message: 'Please input school name', trigger: 'blur' },
@@ -95,10 +95,10 @@ const openDialog = (type: string, row: TeacherType) => {
 			state.ruleForm.subjects = []
 			row.subjects.forEach((s: any) => state.ruleForm.subjects.push(s.id))
 		});
-		state.dialog.title = '修改学校';
+		state.dialog.title = '修改老师';
 		state.dialog.submitTxt = '修 改';
 	} else {
-		state.dialog.title = '新增学校';
+		state.dialog.title = '新增老师';
 		state.dialog.submitTxt = '新 增';
 		// 清空表单，此项需加表单验证才能使用
 		nextTick(() => {

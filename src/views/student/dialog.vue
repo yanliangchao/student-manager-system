@@ -117,18 +117,18 @@ const state = reactive({
 
 const rules = reactive<FormRules<StudentType>>({
 	name: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input name', trigger: 'blur' },
 	],
 	iphone: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input iphone', trigger: 'blur' },
 	],
 	sid: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input school', trigger: 'blur' },
 	],
 })
 
 // 打开弹窗
-const openDialog = (type: string, row: SchoolType) => {
+const openDialog = (type: string, row: StudentType) => {
 	//classDialogFormRef.value.resetFields();
 	state.dialog.type = type;
 	state.dialog.isShowDialog = true;
@@ -136,10 +136,10 @@ const openDialog = (type: string, row: SchoolType) => {
 		nextTick(() => {
 			state.ruleForm = JSON.parse(JSON.stringify(row));
 		});
-		state.dialog.title = '修改用户';
+		state.dialog.title = '修改学生';
 		state.dialog.submitTxt = '修 改';
 	} else {
-		state.dialog.title = '新增用户';
+		state.dialog.title = '新增学生';
 		state.dialog.submitTxt = '新 增';
 		// 清空表单，此项需加表单验证才能使用
 		nextTick(() => {

@@ -26,19 +26,6 @@
 				</el-table-column>
 				<el-table-column prop="describes" label="违纪" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="school_name" label="学校名称" show-overflow-tooltip></el-table-column>
-				<!-- <el-table-column prop="userNickname" label="用户昵称" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="roleSign" label="关联角色" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="department" label="部门" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="phone" label="手机号" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="email" label="邮箱" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="status" label="用户状态" show-overflow-tooltip>
-					<template #default="scope">
-						<el-tag type="success" v-if="scope.row.status">启用</el-tag>
-						<el-tag type="info" v-else>禁用</el-tag>
-					</template>
-				</el-table-column>
-				<el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column> -->
 				<el-table-column label="操作" width="100">
 					<template #default="scope">
 						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
@@ -108,12 +95,12 @@ const onOpenAddUser = (type: string) => {
 	userDialogRef.value.openDialog(type);
 };
 // 打开修改用户弹窗
-const onOpenEditUser = (type: string, row: ClassType) => {
+const onOpenEditUser = (type: string, row: any) => {
 	userDialogRef.value.openDialog(type, row);
 };
 // 删除用户
-const onRowDel = (row: ClassType) => {
-	ElMessageBox.confirm(`此操作将永久删除账户名称：“${row.class_name}”，是否继续?`, '提示', {
+const onRowDel = (row: any) => {
+	ElMessageBox.confirm(`此操作将永久删除违纪记录，是否继续?`, '提示', {
 		confirmButtonText: '确认',
 		cancelButtonText: '取消',
 		type: 'warning',

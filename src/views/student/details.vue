@@ -35,7 +35,7 @@
 					</el-col>
                     <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="违纪内容" prop="describes">
-							<el-input v-model="state.ruleForm.describes" :rows="2" type="textarea" placeholder="请输入详细" clearable></el-input>
+							<el-input v-model="state.ruleForm.describes" :rows="2" type="textarea" placeholder="请输入详细违纪内容" clearable></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>

@@ -83,10 +83,10 @@ const state = reactive({
 
 const rules = reactive<FormRules<ClassType>>({
 	class_id: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input class code', trigger: 'blur' },
 	],
 	class_name: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input class name', trigger: 'blur' },
 	],
 	sid: [
 		{ required: true, message: 'Please input school name', trigger: 'blur' },
@@ -94,7 +94,7 @@ const rules = reactive<FormRules<ClassType>>({
 })
 
 // 打开弹窗
-const openDialog = (type: string, row: SchoolType) => {
+const openDialog = (type: string, row: ClassType) => {
 	//classDialogFormRef.value.resetFields();
 	state.dialog.type = type;
 	state.dialog.isShowDialog = true;

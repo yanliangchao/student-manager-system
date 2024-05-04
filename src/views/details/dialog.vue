@@ -17,7 +17,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="违纪内容" prop="describes">
-							<el-input v-model="state.ruleForm.describes" :rows="2" type="textarea" placeholder="请输入详细" clearable></el-input>
+							<el-input v-model="state.ruleForm.describes" :rows="2" type="textarea" placeholder="请输入详细违纪内容" clearable></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -61,18 +61,18 @@ const state = reactive({
 
 const rules = reactive<FormRules>({
 	describes: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input describes', trigger: 'blur' },
 	],
 	times: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input times', trigger: 'blur' },
 	],
 	sid: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input student', trigger: 'blur' },
 	],
 })
 
 // 打开弹窗
-const openDialog = (type: string, row: SchoolType) => {
+const openDialog = (type: string, row: any) => {
 	//classDialogFormRef.value.resetFields();
 	state.dialog.type = type;
 	state.dialog.isShowDialog = true;
@@ -80,10 +80,10 @@ const openDialog = (type: string, row: SchoolType) => {
 		nextTick(() => {
 			state.ruleForm = JSON.parse(JSON.stringify(row));
 		});
-		state.dialog.title = '修改用户';
+		state.dialog.title = '修改违纪';
 		state.dialog.submitTxt = '修 改';
 	} else {
-		state.dialog.title = '新增用户';
+		state.dialog.title = '新增违纪';
 		state.dialog.submitTxt = '新 增';
 		// 清空表单，此项需加表单验证才能使用
 		nextTick(() => {

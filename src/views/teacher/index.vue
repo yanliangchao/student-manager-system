@@ -100,12 +100,12 @@ const onOpenAddUser = (type: string) => {
 	userDialogRef.value.openDialog(type);
 };
 // 打开修改用户弹窗
-const onOpenEditUser = (type: string, row: SchoolType) => {
+const onOpenEditUser = (type: string, row: TeacherType) => {
 	userDialogRef.value.openDialog(type, row);
 };
 // 删除用户
-const onRowDel = (row: SchoolType) => {
-	ElMessageBox.confirm(`此操作将永久删除账户名称：“${row.school_name}”，是否继续?`, '提示', {
+const onRowDel = (row: TeacherType) => {
+	ElMessageBox.confirm(`此操作将永久删除老师：“${row.name}”，是否继续?`, '提示', {
 		confirmButtonText: '确认',
 		cancelButtonText: '取消',
 		type: 'warning',

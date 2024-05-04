@@ -30,19 +30,6 @@
 				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="father" label="父亲" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="mother" label="母亲" show-overflow-tooltip></el-table-column>
-				<!-- <el-table-column prop="userNickname" label="用户昵称" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="roleSign" label="关联角色" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="department" label="部门" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="phone" label="手机号" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="email" label="邮箱" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="status" label="用户状态" show-overflow-tooltip>
-					<template #default="scope">
-						<el-tag type="success" v-if="scope.row.status">启用</el-tag>
-						<el-tag type="info" v-else>禁用</el-tag>
-					</template>
-				</el-table-column>
-				<el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column> -->
 				<el-table-column label="操作" width="150">
 					<template #default="scope">
 						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="success" @click="onOpenDetails(scope.row)"
@@ -127,7 +114,7 @@ const onOpenEditUser = (type: string, row: StudentType) => {
 };
 // 删除用户
 const onRowDel = (row: StudentType) => {
-	ElMessageBox.confirm(`此操作将永久删除账户名称：“${row.name}”，是否继续?`, '提示', {
+	ElMessageBox.confirm(`此操作将永久删除学生：“${row.name}”，是否继续?`, '提示', {
 		confirmButtonText: '确认',
 		cancelButtonText: '取消',
 		type: 'warning',

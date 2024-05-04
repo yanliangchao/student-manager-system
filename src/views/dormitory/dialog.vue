@@ -72,10 +72,10 @@ const state = reactive({
 
 const rules = reactive<FormRules<DormitoryType>>({
 	building: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input building', trigger: 'blur' },
 	],
 	name: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+		{ required: true, message: 'Please input code', trigger: 'blur' },
 	],
 	sid: [
 		{ required: true, message: 'Please input school name', trigger: 'blur' },
@@ -91,10 +91,10 @@ const openDialog = (type: string, row: DormitoryType) => {
 		nextTick(() => {
 			state.ruleForm = JSON.parse(JSON.stringify(row));
 		});
-		state.dialog.title = '修改用户';
+		state.dialog.title = '修改寝室';
 		state.dialog.submitTxt = '修 改';
 	} else {
-		state.dialog.title = '新增用户';
+		state.dialog.title = '新增寝室';
 		state.dialog.submitTxt = '新 增';
 		// 清空表单，此项需加表单验证才能使用
 		nextTick(() => {

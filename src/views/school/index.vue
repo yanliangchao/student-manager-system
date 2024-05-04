@@ -105,7 +105,7 @@ const onOpenEditUser = (type: string, row: SchoolType) => {
 };
 // 删除用户
 const onRowDel = (row: SchoolType) => {
-	ElMessageBox.confirm(`此操作将永久删除账户名称：“${row.school_name}”，是否继续?`, '提示', {
+	ElMessageBox.confirm(`此操作将永久删除学校：“${row.school_name}”，是否继续?`, '提示', {
 		confirmButtonText: '确认',
 		cancelButtonText: '取消',
 		type: 'warning',
