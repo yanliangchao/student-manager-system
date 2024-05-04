@@ -123,6 +123,9 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 // 新增违纪
 const addDetails = () => {
     state.dialog.isAddDialog = true;
+    nextTick(() => {
+        detailsDialogFormRef.value.resetFields();
+    })
 }
 
 // 违纪查询
