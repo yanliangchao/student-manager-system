@@ -7,6 +7,7 @@
 	"scripts": {
 		"dev": "vite --force",
 		"build": "vite build",
+		"deploy": "C:/Users/liang/AppData/Roaming/npm/vercel --prod",
 		"lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/"
 	},
 	"dependencies": {
