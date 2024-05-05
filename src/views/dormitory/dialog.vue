@@ -14,16 +14,16 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="寝室长" prop="mid">
-							<el-select v-model="state.ruleForm.mid" placeholder="请选择寝室长" filterable clearable class="w100">
-								<el-option v-for="item in state.students" :key="item.value" :label="item.label" :value="item.value" />
+						<el-form-item label="学校名" prop="sid">
+							<el-select v-model="state.ruleForm.sid" placeholder="请选择学校" filterable clearable class="w100">
+								<el-option v-for="item in state.schools" :key="item.value" :label="item.label" :value="item.value" />
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="学校名" prop="sid">
-							<el-select v-model="state.ruleForm.sid" placeholder="请选择学校" filterable clearable class="w100">
-								<el-option v-for="item in state.schools" :key="item.value" :label="item.label" :value="item.value" />
+						<el-form-item label="生活老师" prop="tid">
+							<el-select v-model="state.ruleForm.tid" placeholder="请选择生活老师" filterable clearable class="w100">
+								<el-option v-for="item in state.teachers" :key="item.value" :label="item.label" :value="item.value" />
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -42,7 +42,7 @@
 <script setup lang="ts" name="classDialog">
 import { reactive, ref, nextTick } from 'vue';
 import { useSchoolApi } from '/@/api/school';
-import { useStudentApi } from '/@/api/student';
+import { useTeacherApi } from '/@/api/teacher';
 import { useDormitoryApi } from '/@/api/dormitory';
 import { ElMessage, FormRules, FormInstance } from 'element-plus';
 
@@ -55,12 +55,12 @@ const state = reactive({
 	ruleForm: {
 		building: '',
 		name: '',
-		mid: null,
+		tid: null,
 		//name: '',
 		sid: null,
 	},
 	schools: [] as SelectOptionType[],
-	students: [] as SelectOptionType[],
+	teachers: [] as SelectOptionType[],
 	dialog: {
 		loading: false,
 		isShowDialog: false,
@@ -103,9 +103,9 @@ const openDialog = (type: string, row: DormitoryType) => {
 	}
 	nextTick(() => {
 		state.schools = [];
-		state.students = [];
+		state.teachers = [];
 		getSchoolData();
-		getStudentData();
+		getTeacherData();
 	})
 	//getMenuData();
 };
@@ -162,13 +162,13 @@ const getSchoolData = () => {
 		});
 	})
 }
-// 获取学生下拉框
-const getStudentData = () => {
-	if(state.students.length > 0) return;
-	useStudentApi().list().then((res) => {
-		res.data.forEach((t: { id: number; name: string; }) => {
-			state.students.push({
-				label: t.name,
+// 获取老师下拉框
+const getTeacherData = () => {
+	if(state.teachers.length > 0) return;
+	useTeacherApi().list().then((res) => {
+		res.data.forEach((t: { id: number; teacher_name: string; }) => {
+			state.teachers.push({
+				label: t.teacher_name,
 				value: t.id,
 			})
 		});

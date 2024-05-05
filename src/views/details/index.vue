@@ -19,13 +19,19 @@
 			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column type="index" label="序号" width="60" />
 				<el-table-column prop="name" label="姓名" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="name" label="学校" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="class_name" label="班级" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="dormitory_name" label="寝室" show-overflow-tooltip>
+					<template #default="scope">
+						{{ scope.row.building }} - {{  scope.row.dormitory_name }} - {{  scope.row.number }}
+					</template>
+				</el-table-column>
 				<el-table-column prop="times" label="时间" show-overflow-tooltip>
 					<template #default="scope">
 						{{ formatDate(scope.row.times) }}
 					</template>
 				</el-table-column>
 				<el-table-column prop="describes" label="违纪" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="school_name" label="学校名称" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="100">
 					<template #default="scope">
 						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"

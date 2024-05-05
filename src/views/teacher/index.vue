@@ -27,9 +27,9 @@
 						<el-tag type="success" v-for="(v, k) in scope.row.class_teacher" :key="k">{{ v.class_name }}</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column prop="subjects" label="所教科目" show-overflow-tooltip>
+				<el-table-column prop="class" label="所教科目" show-overflow-tooltip>
 					<template #default="scope">
-						<el-tag v-for="(v, k) in scope.row.subjects" :key="k">{{ v.name }}</el-tag>
+						<el-tag v-for="(v, k) in scope.row.class" :key="k">{{ v.class_id }} / {{ v.subject }}</el-tag>
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" width="100">

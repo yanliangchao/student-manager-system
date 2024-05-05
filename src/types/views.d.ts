@@ -146,6 +146,8 @@ declare type ClassType<T = any> = {
 	tid: number;
 	name: string;
 	sid: number;
+	sidCount: number
+	tidCount: number
 	school_name: string;
 }
 
@@ -181,6 +183,7 @@ declare type DormitoryType<T = any> = {
 	name: string;
 	manager: string;
 	sid: number;
+	sidCount: number
 	school_name: string;
 }
 

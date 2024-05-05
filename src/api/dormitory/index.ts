@@ -15,9 +15,22 @@ export function useDormitoryApi() {
 				method: 'get',
 			});
 		},
+		getStuByid: (id: number) => {
+			return request({
+				url: '/api/dormitory/list/stu/' +id,
+				method: 'get',
+			});
+		},
 		add: (data: object) => {
 			return request({
 				url: '/api/dormitory/add',
+				method: 'post',
+				data,
+			});
+		},
+		addStu: (data: object) => {
+			return request({
+				url: '/api/dormitory/add/stu',
 				method: 'post',
 				data,
 			});
@@ -29,9 +42,22 @@ export function useDormitoryApi() {
 				data,
 			});
 		},
+		modStu: (data: object) => {
+			return request({
+				url: '/api/dormitory/mod/stu',
+				method: 'put',
+				data,
+			});
+		},
         del: (id: number) => {
 			return request({
 				url: '/api/dormitory/del/' + id,
+				method: 'delete',
+			});
+		},
+		delStu: (id: number) => {
+			return request({
+				url: '/api/dormitory/del/stu/' + id,
 				method: 'delete',
 			});
 		},

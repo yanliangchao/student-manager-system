@@ -25,13 +25,13 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+					<!-- <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="所教科目" prop="subjects">
 							<el-select v-model="state.ruleForm.subjects" placeholder="请选择所教科目" multiple filterable clearable class="w100">
 								<el-option v-for="item in state.subjects" :key="item.value" :label="item.label" :value="item.value" />
 							</el-select>
 						</el-form-item>
-					</el-col>
+					</el-col> -->
 				</el-row>
 			</el-form>
 			<template #footer>
@@ -47,7 +47,6 @@
 <script setup lang="ts" name="schoolDialog">
 import { reactive, ref, nextTick } from 'vue';
 import { useSchoolApi } from '/@/api/school';
-import { useSubjectApi } from '/@/api/subject';
 import { useTeacherApi } from '/@/api/teacher';
 import { ElMessage, FormRules } from 'element-plus';
 
@@ -61,10 +60,8 @@ const state = reactive({
 		name: '', 
 		iphone: '',
 		level: '',
-		sid: null,
-		subjects: [] as number[],
+		sid: null
 	},
-	subjects: [] as SelectOptionType[],
 	schools: [] as SelectOptionType[],
 	dialog: {
 		loading: false,
@@ -92,8 +89,8 @@ const openDialog = (type: string, row: TeacherType) => {
 	if (type === 'edit') {
 		nextTick(() => {
 			state.ruleForm = JSON.parse(JSON.stringify(row));
-			state.ruleForm.subjects = []
-			row.subjects.forEach((s: any) => state.ruleForm.subjects.push(s.id))
+			// state.ruleForm.subjects = []
+			// row.subjects.forEach((s: any) => state.ruleForm.subjects.push(s.id))
 		});
 		state.dialog.title = '修改老师';
 		state.dialog.submitTxt = '修 改';
@@ -107,8 +104,6 @@ const openDialog = (type: string, row: TeacherType) => {
 	}
 	nextTick(() => {
 		state.schools = [];
-		state.subjects = [];
-		getSubjectData();
 		getSchoolData();
 	})
 	//getMenuData();
@@ -156,18 +151,7 @@ const getSchoolData = () => {
 		});
 	})
 }
-// 获取科目下拉框
-const getSubjectData = () => {
-	if(state.schools.length > 0) return;
-	useSubjectApi().list().then((res) => {
-		res.data.forEach((s: { id: number; name: string; }) => {
-			state.subjects.push({
-				label: s.name,
-				value: s.id,
-			})
-		});
-	})
-}
+
 
 // 暴露变量
 defineExpose({

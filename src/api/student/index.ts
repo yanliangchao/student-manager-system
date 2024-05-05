@@ -16,6 +16,13 @@ export function useStudentApi() {
 				params,
 			});
 		},
+		getPageByCid: (id: number, params?: object) => {
+			return request({
+				url: '/api/student/page/cid/' + id,
+				method: 'get',
+				params,
+			});
+		},
 		list: () => {
 			return request({
 				url: '/api/student/list',

@@ -14,6 +14,20 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="学校" prop="sid">
+							<el-select v-model="state.ruleForm.sid" placeholder="请选择学校" filterable clearable class="w100">
+								<el-option v-for="item in state.schools" :key="item.value" :label="item.label" :value="item.value" />
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="班级" prop="cid">
+							<el-select v-model="state.ruleForm.cid" placeholder="请选择班级" filterable clearable class="w100">
+								<el-option v-for="item in state.classs" :key="item.value" :label="item.label" :value="item.value" />
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="父亲" prop="father">
 							<el-input v-model="state.ruleForm.father" placeholder="请输入父亲姓名" clearable></el-input>
 						</el-form-item>
@@ -33,27 +47,18 @@
 							<el-input v-model="state.ruleForm.mother_iphone" placeholder="请输入母亲手机号" clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="班级" prop="cid">
-							<el-select v-model="state.ruleForm.cid" placeholder="请选择班级" filterable clearable class="w100">
-								<el-option v-for="item in state.classs" :key="item.value" :label="item.label" :value="item.value" />
-							</el-select>
+					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+						<el-form-item label="地址" prop="address">
+							<el-input v-model="state.ruleForm.address" :rows="2" type="textarea" placeholder="请输入详细地址" clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					<!-- <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="寝室" prop="did">
 							<el-select v-model="state.ruleForm.did" placeholder="请选择寝室" filterable clearable class="w100">
 								<el-option v-for="item in state.dormitorys" :key="item.value" :label="item.label" :value="item.value" />
 							</el-select>
 						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="学校" prop="sid">
-							<el-select v-model="state.ruleForm.sid" placeholder="请选择学校" filterable clearable class="w100">
-								<el-option v-for="item in state.schools" :key="item.value" :label="item.label" :value="item.value" />
-							</el-select>
-						</el-form-item>
-					</el-col>
+					</el-col> -->
 				</el-row>
 			</el-form>
 			<template #footer>
@@ -105,7 +110,7 @@ const state = reactive({
 	},
 	schools: [] as SelectOptionType[],
 	classs: [] as SelectOptionType[],
-	dormitorys: [] as SelectOptionType[],
+	//dormitorys: [] as SelectOptionType[],
 	dialog: {
 		loading: false,
 		isShowDialog: false,
@@ -149,8 +154,8 @@ const openDialog = (type: string, row: StudentType) => {
 	nextTick(() => {
 		state.schools = [];
 		state.classs = [];
-		state.dormitorys = [];
-		getDormitoryData();
+		//state.dormitorys = [];
+		//getDormitoryData();
 		getClassData();
 		getSchoolData();
 	})
@@ -222,17 +227,17 @@ const getClassData = () => {
 	})
 }
 // 获取寝室下拉框
-const getDormitoryData = () => {
-	if(state.dormitorys.length > 0) return;
-	useDormitoryApi().list().then((res) => {
-		res.data.forEach((t: { id: number; building:string, name: string; }) => {
-			state.dormitorys.push({
-				label: t.building + ' - ' + t.name,
-				value: t.id,
-			})
-		});
-	})
-}
+// const getDormitoryData = () => {
+// 	if(state.dormitorys.length > 0) return;
+// 	useDormitoryApi().list().then((res) => {
+// 		res.data.forEach((t: { id: number; building:string, name: string; }) => {
+// 			state.dormitorys.push({
+// 				label: t.building + ' - ' + t.name,
+// 				value: t.id,
+// 			})
+// 		});
+// 	})
+// }
 
 // 暴露变量
 defineExpose({

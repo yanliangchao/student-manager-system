@@ -21,15 +21,27 @@
 				<el-table-column prop="name" label="姓名" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="iphone" label="手机" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="address" label="地址" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="class_name" label="班级" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="dormitory_name" label="寝室" show-overflow-tooltip>
 					<template #default="scope">
-						{{ scope.row.building }} - {{  scope.row.dormitory_name }}
+						{{ scope.row.building }} - {{  scope.row.dormitory_name }} - {{  scope.row.number }}
 					</template>
 				</el-table-column>
-				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="father" label="父亲" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="mother" label="母亲" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="father" label="父亲" show-overflow-tooltip>
+					<template #default="scope">
+						<el-tooltip class="box-item" effect="dark" :content="scope.row.father_iphone" placement="top-end">
+							{{ scope.row.father }}
+						</el-tooltip>
+					</template>
+				</el-table-column>
+				<el-table-column prop="mother" label="母亲" show-overflow-tooltip>
+					<template #default="scope">
+						<el-tooltip class="box-item" effect="dark" :content="scope.row.mother_iphone" placement="top-end">
+							{{ scope.row.mother }}
+						</el-tooltip>
+					</template>
+				</el-table-column>
 				<el-table-column label="操作" width="150">
 					<template #default="scope">
 						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="success" @click="onOpenDetails(scope.row)"

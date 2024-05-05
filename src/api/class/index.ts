@@ -15,9 +15,22 @@ export function useClassApi() {
 				method: 'get',
 			});
 		},
+		getSubTecById: (id: number) => {
+			return request({
+				url: '/api/class/list/sub/tec/' + id,
+				method: 'get',
+			});
+		},
 		add: (data: object) => {
 			return request({
 				url: '/api/class/add',
+				method: 'post',
+				data,
+			});
+		},
+		addSubTec: (data: object) => {
+			return request({
+				url: '/api/class/add/sub/tec',
 				method: 'post',
 				data,
 			});
@@ -33,6 +46,13 @@ export function useClassApi() {
 			return request({
 				url: '/api/class/del/' + id,
 				method: 'delete',
+			});
+		},
+		delSubTec: (data: object) => {
+			return request({
+				url: '/api/class/del/sub/tec',
+				method: 'delete',
+				data,
 			});
 		},
 	};

@@ -1,12 +1,12 @@
 <template>
 	<div class="system-user-dialog-container">
-		<el-dialog v-model="state.dialog.isShowDialog" :close-on-click-modal='false' width="500px">
-            <template #header="{ titleId, titleClass }">
+		<el-dialog :title="state.dialog.showTitle" v-model="state.dialog.isShowDialog" :close-on-click-modal='false' width="500px">
+            <!-- <template #header="{ titleId, titleClass }">
                 <div class="my-header">
                     <h4 :id="titleId" :class="titleClass">{{ state.dialog.showTitle }}</h4>
                     <el-button type="primary" size="small" @click="addDetails()">新增违纪</el-button>
                 </div>
-            </template>
+            </template> -->
 			<el-timeline style="max-width: 600px">
                 <el-timeline-item
                 v-for="(activity, index) in state.details"
@@ -19,7 +19,7 @@
                 </el-timeline-item>
             </el-timeline>
 		</el-dialog>
-        <el-dialog v-model="state.dialog.isAddDialog" :close-on-click-modal='false' width="500px">
+        <!-- <el-dialog v-model="state.dialog.isAddDialog" :close-on-click-modal='false' width="500px">
             <template #header="{ titleId, titleClass }">
                 <div class="my-header">
                     <h4 :id="titleId" :class="titleClass">{{ state.dialog.addTitle }}</h4>
@@ -40,7 +40,7 @@
 					</el-col>
 				</el-row>
             </el-form>
-		</el-dialog>
+		</el-dialog> -->
 	</div>
 </template>
 
@@ -53,20 +53,19 @@ import { ElMessage, FormRules, FormInstance } from 'element-plus';
 const emit = defineEmits(['refresh']);
 
 // 定义变量内容
-const detailsDialogFormRef = ref();
+//const detailsDialogFormRef = ref();
 const state = reactive({
-    ruleForm: {
-        sid: null as unknown as number,
-        times: null,
-        describes: '',
-    },
+    // ruleForm: {
+    //     sid: null as unknown as number,
+    //     times: null,
+    //     describes: '',
+    // },
     details: [] as any,
 	dialog: {
 		loading: false,
 		isShowDialog: false,
         isAddDialog: false,
 		showTitle: '',
-        addTitle: '',
 	},
 });
 
@@ -80,16 +79,16 @@ const rules = reactive<FormRules>({
 })
 
 // 打开弹窗
-const openDialog = (row: StudentType) => {
+const openDialog = (row: any) => {
 	//schoolDialogFormRef.value.resetFields();
 	state.dialog.isShowDialog = true;
-    state.dialog.showTitle = row.name + ' 违纪查询';
-    state.dialog.addTitle = row.name + ' 新增违纪';
+    state.dialog.showTitle = `${row.school_name} / ${row.class_name} / ${row.building}-${row.dormitory_name} / ${row.name} 违纪情况`;
+    //state.dialog.addTitle = row.name + ' 新增违纪';
     state.details = []
 	nextTick(() => {
 	    getStudentDetails(row.id);
     })
-    state.ruleForm.sid = row.id;
+    //state.ruleForm.sid = row.id;
 };
 // 关闭弹窗
 const closeDialog = () => {
@@ -104,29 +103,29 @@ const onCancel = () => {
 	closeDialog();
 };
 // 提交
-const onSubmit = (formEl: FormInstance | undefined) => {
-	state.dialog.loading = true;
-    if (!formEl) return
-	formEl.validate((valid, fields) => {
-		if (valid) {
-            useDetailsApi().add(state.ruleForm).then((res) => {
-                ElMessage.success(res.message);
-                state.dialog.loading = false;
-                closeAddDialog();
-                //emit('refresh');
-                getStudentDetails(state.ruleForm.sid);
-            })
-        }
-    })
-};
+// const onSubmit = (formEl: FormInstance | undefined) => {
+// 	state.dialog.loading = true;
+//     if (!formEl) return
+// 	formEl.validate((valid, fields) => {
+// 		if (valid) {
+//             useDetailsApi().add(state.ruleForm).then((res) => {
+//                 ElMessage.success(res.message);
+//                 state.dialog.loading = false;
+//                 closeAddDialog();
+//                 //emit('refresh');
+//                 getStudentDetails(state.ruleForm.sid);
+//             })
+//         }
+//     })
+// };
 
 // 新增违纪
-const addDetails = () => {
-    state.dialog.isAddDialog = true;
-    nextTick(() => {
-        detailsDialogFormRef.value.resetFields();
-    })
-}
+// const addDetails = () => {
+//     state.dialog.isAddDialog = true;
+//     nextTick(() => {
+//         detailsDialogFormRef.value.resetFields();
+//     })
+// }
 
 // 违纪查询
 const getStudentDetails = (id: number) => {

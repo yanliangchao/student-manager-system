@@ -15,12 +15,28 @@
 					</el-icon>
 					新增班级
 				</el-button>
+				<!-- <el-button size="default" type="warning" class="ml10" @click="onOpenAddSub()">
+					<el-icon>
+						<ele-FolderAdd />
+					</el-icon>
+					添加科目
+				</el-button> -->
 			</div>
 			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column type="index" label="序号" width="60" />
 				<el-table-column prop="class_id" label="班级号" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="class_name" label="班级名" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="name" label="班主任" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="tidCount" label="教师" show-overflow-tooltip>
+					<template #default="scope">
+						<el-button size="small" text type="primary" @click="getTeacherByCid(scope.row)" :disabled="Number(scope.row.tidCount) === -1">{{ scope.row.tidCount }}</el-button>
+					</template>
+				</el-table-column>
+				<el-table-column prop="sidCount" label="学生" show-overflow-tooltip>
+					<template #default="scope">
+						<el-button size="small" text type="primary" @click="getStudentByCid(scope.row)" :disabled="Number(scope.row.sidCount) === -1">{{ scope.row.sidCount }}</el-button>
+					</template>
+				</el-table-column>
 				<el-table-column prop="school_name" label="学校名称" show-overflow-tooltip></el-table-column>
 				<!-- <el-table-column prop="userNickname" label="用户昵称" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="roleSign" label="关联角色" show-overflow-tooltip></el-table-column>
@@ -59,6 +75,9 @@
 			</el-pagination>
 		</el-card>
 		<UserDialog ref="userDialogRef" @refresh="getTableData()" />
+		<StuDialog ref="stuDialogRef"/>
+		<TecDialog ref="tecDialogRef"/>
+		
 	</div>
 </template>
 
@@ -69,9 +88,15 @@ import { useClassApi } from '/@/api/class/index';
 
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/class/dialog.vue'));
+const StuDialog = defineAsyncComponent(() => import('/@/views/class/stuDetails.vue'));
+const TecDialog = defineAsyncComponent(() => import('/@/views/class/tecDetails.vue'));
+
 
 // 定义变量内容
 const userDialogRef = ref();
+const stuDialogRef = ref();
+const tecDialogRef = ref();
+
 const state = reactive<ClassState>({
 	tableData: {
 		data: [],
@@ -107,6 +132,7 @@ const onOpenAddUser = (type: string) => {
 const onOpenEditUser = (type: string, row: ClassType) => {
 	userDialogRef.value.openDialog(type, row);
 };
+
 // 删除用户
 const onRowDel = (row: ClassType) => {
 	ElMessageBox.confirm(`此操作将永久删除班级：“${row.class_name}”，是否继续?`, '提示', {
@@ -133,6 +159,17 @@ const onHandleCurrentChange = (val: number) => {
 	state.tableData.param.pageNum = val;
 	getTableData();
 };
+
+// 获取学生并弹窗显示
+const getStudentByCid = (row: ClassType) => {
+	stuDialogRef.value.openDialog(row);
+}
+
+// 获取各科老师并弹窗显示
+const getTeacherByCid = (row: ClassType) => {
+	tecDialogRef.value.openDialog(row);
+}
+
 // 页面加载时
 onMounted(() => {
 	getTableData();
