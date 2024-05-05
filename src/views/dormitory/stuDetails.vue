@@ -15,14 +15,14 @@
 				</el-table-column>
 				<el-table-column prop="owner" label="角色" show-overflow-tooltip>
 					<template #default="scope">
-						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="success" @click="onSetOwner(scope.row)">{{ Number(scope.row.owner) === 0 ? '成员' : '寝室长' }}</el-button>
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="success" @click="onSetOwner(scope.row)">{{ Number(scope.row.owner) === 0 ? '成员' : '寝室长' }}</el-button>
 					</template>
 				</el-table-column>
                 <el-table-column prop="father" label="父亲" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="mother" label="母亲" show-overflow-tooltip></el-table-column>
                 <el-table-column label="操作" width="80">
                     <template #default="scope">
-                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="success" @click="onDeleteStu(scope.row)">移出</el-button>
+                        <el-button :disabled="scope.row.username === 'admin'" size="small" text type="success" @click="onDeleteStu(scope.row)">移出</el-button>
                     </template>
                 </el-table-column>
             </el-table>

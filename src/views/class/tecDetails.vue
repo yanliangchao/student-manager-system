@@ -15,7 +15,7 @@
                 <el-table-column prop="iphone" label="手机" show-overflow-tooltip></el-table-column>
                 <el-table-column label="操作" width="80">
                     <template #default="scope">
-                        <el-button :disabled="scope.row.userName === 'admin'" size="small" text type="success" @click="onDeleteStu(scope.row)">移出</el-button>
+                        <el-button :disabled="scope.row.username === 'admin'" size="small" text type="success" @click="onDeleteStu(scope.row)">移出</el-button>
                     </template>
                 </el-table-column>
             </el-table>

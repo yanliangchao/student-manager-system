@@ -46,7 +46,7 @@ const onRadioChange = async () => {
 	Session.remove('userInfo');
 	// 模拟数据
 	frontEndsResetRoute();
-	Cookies.set('userName', userAuth.value);
+	Cookies.set('username', userAuth.value);
 	// 模拟切换不同权限用户
 	await storesUserInfo.setUserInfos();
 	await setAddRoute();

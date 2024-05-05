@@ -50,7 +50,7 @@ service.interceptors.response.use(
 		}
 	},
 	(error) => {
-		console.log(error)
+		// console.log(error)
 		// 对响应错误做点什么
 		// `token` 过期或者账号已在别处登录
 		if (error.response.status === 401 || error.response.status === 4001) {
@@ -65,7 +65,7 @@ service.interceptors.response.use(
 		} else if (error.message == 'Network Error') {
 			ElMessage.error('网络连接错误');
 		} else {
-			if (error.response.data) ElMessage.error(error.response.statusText);
+			if (error.response.data) ElMessage.error(error.response.data);
 			else ElMessage.error('接口路径找不到');
 		}
 		return Promise.reject(error);

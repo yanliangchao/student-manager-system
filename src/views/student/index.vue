@@ -44,13 +44,13 @@
 				</el-table-column>
 				<el-table-column label="操作" width="150">
 					<template #default="scope">
-						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="success" @click="onOpenDetails(scope.row)"
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="success" @click="onOpenDetails(scope.row)"
 							>违纪</el-button
 						>
-						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
 							>修改</el-button
 						>
-						<el-button :disabled="scope.row.userName === 'admin'" size="small" text type="danger" @click="onRowDel(scope.row)">删除</el-button>
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="danger" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>

@@ -101,7 +101,7 @@ const onSignIn = async () => {
 		// 存储 token 到浏览器缓存
 		Session.set('token', res.token);
 		// 模拟数据，对接接口时，记得删除多余代码及对应依赖的引入。用于 `/src/stores/userInfo.ts` 中不同用户登录判断（模拟数据）
-		Cookies.set('userName', state.ruleForm.username);
+		Cookies.set('username', state.ruleForm.username);
 		if (!themeConfig.value.isRequestRoutes) {
 			// 前端控制路由，2、请注意执行顺序
 			const isNoPower = await initFrontEndControlRoutes();
@@ -115,6 +115,7 @@ const onSignIn = async () => {
 		}
 	}, error => {
 		console.log(error)
+		//ElMessage.error('用户名或者密码错误！！');
 		state.loading.signIn = false;
 	})
 };
