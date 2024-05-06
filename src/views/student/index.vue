@@ -23,6 +23,14 @@
 				<el-table-column prop="address" label="地址" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="class_name" label="班级" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="subjects" label="主修科目" show-overflow-tooltip>
+					<template #default="scope">
+						<el-text class="mx-1" :type="getColor.get((k + 1)%5)" v-for="(v, k) in scope.row.subjects" :key="k" >
+							{{ v.name.charAt(0) }}
+							<span v-if="k < scope.row.subjects.length - 1"> | </span>
+						</el-text>
+					</template>
+				</el-table-column>
 				<el-table-column prop="dormitory_name" label="寝室" show-overflow-tooltip>
 					<template #default="scope">
 						{{ scope.row.building }} - {{  scope.row.dormitory_name }} - {{  scope.row.number }}
@@ -150,6 +158,15 @@ const onHandleCurrentChange = (val: number) => {
 	state.tableData.param.pageNum = val;
 	getTableData();
 };
+
+// 获取随机颜色
+const getColor = new Map([
+	[1, 'primary'],
+	[2, 'success'],
+	[3, 'info'],
+	[4, 'warning'],
+	[5, 'danger'],
+])
 // 页面加载时
 onMounted(() => {
 	getTableData();
