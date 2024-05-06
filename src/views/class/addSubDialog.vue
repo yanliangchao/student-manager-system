@@ -17,6 +17,11 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="主修" prop="master">
+							<el-switch v-model="state.ruleForm.master" inline-prompt active-text="是" :active-value="1" inactive-text="否" :inactive-value="0"/>
+						</el-form-item>
+					</el-col>
 				</el-row>
 			</el-form>
 			<template #footer>
@@ -47,6 +52,7 @@ const state = reactive({
 		tid: null,
 		//name: '',
 		sid: null,
+		master: 0,
 		//school_name: '', // 账户名称
 		// userNickname: '', // 用户昵称
 		// roleSign: '', // 关联角色
@@ -71,10 +77,7 @@ const state = reactive({
 });
 
 const rules = reactive<FormRules<ClassType>>({
-	class_id: [
-		{ required: true, message: 'Please input class code', trigger: 'blur' },
-	],
-	class_name: [
+	tid: [
 		{ required: true, message: 'Please input class name', trigger: 'blur' },
 	],
 	sid: [
@@ -124,6 +127,7 @@ const onSubmit = (formEl: FormInstance | undefined) => {
                 state.dialog.loading = false;
                 closeDialog();
                 emit('refresh');
+				//state.dialog.data.tidCount = state.dialog.data.tidCount + 1
             }).catch(() => {
                 state.dialog.loading = false;
             })

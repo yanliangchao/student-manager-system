@@ -9,7 +9,11 @@
             </template>
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column type="index" label="序号" width="60" />
-                <el-table-column prop="subject" label="科目" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="subject" label="科目" show-overflow-tooltip>
+					<template #default="scope">
+                        {{ scope.row.subject }}{{ Number(scope.row.master) === 1 ? '(主)' : ''  }}
+                    </template>
+				</el-table-column>
                 <el-table-column prop="name" label="教师" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="level" label="级别" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="iphone" label="手机" show-overflow-tooltip></el-table-column>
@@ -64,6 +68,8 @@ const getTableData = () => {
 		ElMessage.success(res.message);
 		state.tableData.total = Number(res.count)
 		state.tableData.data = res.data
+		state.dialog.data.tidCount = state.tableData.data.length;
+		state.dialog.title = `${state.dialog.data.school_name}-${state.dialog.data.class_name}科目教师详情(${state.dialog.data.tidCount})`;
 		//console.log(state)
 	})
 	setTimeout(() => {
@@ -98,6 +104,8 @@ const onDeleteStu = (row: any) => {
             row.cid = state.dialog.data.id;
 			useClassApi().delSubTec(row).then((res) => {
 				ElMessage.success(res.message);
+				// state.dialog.data.tidCount = state.dialog.data.tidCount - 1;
+				// state.dialog.title = `${state.dialog.data.school_name}-${state.dialog.data.class_name}科目教师详情: (${state.dialog.data.tidCount})`;
 				getTableData();
 			})
 			
