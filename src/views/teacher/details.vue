@@ -82,7 +82,7 @@ const rules = reactive<FormRules>({
 const openDialog = (row: any) => {
 	//schoolDialogFormRef.value.resetFields();
 	state.dialog.isShowDialog = true;
-    state.dialog.showTitle = `${row.school_name} / ${row.class_name} / ${row.building}-${row.dormitory_name} / ${row.name} 违纪情况`;
+    state.dialog.showTitle = `${row.school_name} / ${row.name} 违纪情况`;
     //state.dialog.addTitle = row.name + ' 新增违纪';
     state.details = []
 	nextTick(() => {
@@ -129,7 +129,7 @@ const onCancel = () => {
 
 // 违纪查询
 const getStudentDetails = (id: number) => {
-    useDetailsApi().listBySid(0, id).then((res) => {
+    useDetailsApi().listBySid(1, id).then((res) => {
         state.details = res.data;
     })
 }

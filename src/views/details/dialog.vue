@@ -4,9 +4,14 @@
 			<el-form ref="classDialogFormRef" :rules="rules" :model="state.ruleForm" size="default" label-width="90px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="姓名" prop="sid">
+						<el-form-item label="学生" prop="sid" v-if="!state.dialog.selectd">
 							<el-select v-model="state.ruleForm.sid" placeholder="请选择学生" filterable clearable class="w100">
 								<el-option v-for="item in state.students" :key="item.value" :label="item.label" :value="item.value" />
+							</el-select>
+						</el-form-item>
+						<el-form-item label="老师" prop="tid" v-if="state.dialog.selectd">
+							<el-select v-model="state.ruleForm.tid" placeholder="请选择老师" filterable clearable class="w100">
+								<el-option v-for="item in state.teachers" :key="item.value" :label="item.label" :value="item.value" />
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -36,6 +41,7 @@
 import { reactive, ref, nextTick } from 'vue';
 import { useStudentApi } from '/@/api/student';
 import { useDetailsApi } from '/@/api/details';
+import { useTeacherApi } from '/@/api/teacher';
 import { ElMessage, FormRules, FormInstance } from 'element-plus';
 
 // 定义子组件向父组件传值/事件
@@ -48,9 +54,12 @@ const state = reactive({
 		describes: '',
 		times: '',
 		sid: null,
+		tid: null,
 	},
 	students: [] as SelectOptionType[],
+	teachers: [] as SelectOptionType[],
 	dialog: {
+		selectd: 0,
 		loading: false,
 		isShowDialog: false,
 		type: '',
@@ -69,13 +78,23 @@ const rules = reactive<FormRules>({
 	sid: [
 		{ required: true, message: 'Please input student', trigger: 'blur' },
 	],
+	tid: [
+		{ required: true, message: 'Please input teacher', trigger: 'blur' },
+	],
 })
 
 // 打开弹窗
-const openDialog = (type: string, row: any) => {
+const openDialog = (type: string, selectd: number, row: any) => {
 	//classDialogFormRef.value.resetFields();
+	state.ruleForm = {
+		describes: '',
+		times: '',
+		sid: null,
+		tid: null,
+	}
 	state.dialog.type = type;
 	state.dialog.isShowDialog = true;
+	state.dialog.selectd = selectd;
 	if (type === 'edit') {
 		nextTick(() => {
 			state.ruleForm = JSON.parse(JSON.stringify(row));
@@ -91,8 +110,13 @@ const openDialog = (type: string, row: any) => {
 		});
 	}
 	nextTick(() => {
-		state.students = [];
-		getStudentData();
+		if(state.dialog.selectd) {
+			state.teachers = [];
+			getTeacherData();
+		} else{
+			state.students = [];
+			getStudentData();
+		}		
 	})
 	//getMenuData();
 };
@@ -149,9 +173,29 @@ const getStudentData = () => {
 		});
 	})
 }
+// 获取老师下拉框
+const getTeacherData = () => {
+	if(state.teachers.length > 0) return;
+	useTeacherApi().list().then((res) => {
+		res.data.forEach((t: { id: number; teacher_name: string; }) => {
+			state.teachers.push({
+				label: t.teacher_name,
+				value: t.id,
+			})
+		});
+	})
+}
 
 // 暴露变量
 defineExpose({
 	openDialog,
 });
 </script>
+<style scoped>
+.my-header {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  gap: 16px;
+}
+</style>

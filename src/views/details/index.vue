@@ -2,24 +2,28 @@
 	<div class="system-user-container layout-padding">
 		<el-card shadow="hover" class="layout-padding-auto">
 			<div class="system-user-search mb15">
-				<el-input v-model="state.tableData.param.search" size="default" placeholder="请输入班级名称" style="max-width: 180px"> </el-input>
+				<el-radio-group v-model="state.tableData.selectd" size="default" @change="selectedType()">
+					<el-radio-button :value="0">学生</el-radio-button>
+					<el-radio-button :value="1">老师</el-radio-button>
+				</el-radio-group>
+				<el-input v-model="state.tableData.param.search" class="ml10" size="default" placeholder="请输入查询条件" style="max-width: 180px"> </el-input>
 				<el-button size="default" type="primary" class="ml10" @click="getTableData()">
 					<el-icon>
 						<ele-Search />
 					</el-icon>
 					查询
 				</el-button>
-				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('add')">
+				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('add', state.tableData.selectd)">
 					<el-icon>
 						<ele-FolderAdd />
 					</el-icon>
 					新增违纪
 				</el-button>
 			</div>
-			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
+			<el-table v-if="!state.tableData.selectd" :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column type="index" label="序号" width="60" />
-				<el-table-column prop="name" label="姓名" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="name" label="学校" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="name" label="学生" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="class_name" label="班级" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="dormitory_name" label="寝室" show-overflow-tooltip>
 					<template #default="scope">
@@ -34,7 +38,26 @@
 				<el-table-column prop="describes" label="违纪" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="100">
 					<template #default="scope">
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', state.tableData.selectd, scope.row)"
+							>修改</el-button
+						>
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
+			<el-table v-if="state.tableData.selectd" :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
+				<el-table-column type="index" label="序号" width="60" />
+				<el-table-column prop="name" label="老师" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="times" label="时间" show-overflow-tooltip>
+					<template #default="scope">
+						{{ formatDate(scope.row.times) }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="describes" label="违纪" show-overflow-tooltip></el-table-column>
+				<el-table-column label="操作" width="100">
+					<template #default="scope">
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', state.tableData.selectd, scope.row)"
 							>修改</el-button
 						>
 						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
@@ -74,6 +97,7 @@ const state = reactive({
 		data: [],
 		total: 0,
 		loading: false,
+		selectd: 0,
 		param: {
 			search: '',
 			pageNum: 1,
@@ -85,8 +109,8 @@ const state = reactive({
 // 初始化表格数据
 const getTableData = () => {
 	state.tableData.loading = true;
-	//const data = [];
-	useDetailsApi().getPage(state.tableData.param).then((res) => {
+	state.tableData.data = [];
+	useDetailsApi().getPage(state.tableData.selectd, state.tableData.param).then((res) => {
 		ElMessage.success(res.message);
 		state.tableData.total = Number(res.count)
 		state.tableData.data = res.data
@@ -97,12 +121,12 @@ const getTableData = () => {
 	}, 500);
 };
 // 打开新增用户弹窗
-const onOpenAddUser = (type: string) => {
-	userDialogRef.value.openDialog(type);
+const onOpenAddUser = (type: string, selectd: number) => {
+	userDialogRef.value.openDialog(type, selectd);
 };
 // 打开修改用户弹窗
-const onOpenEditUser = (type: string, row: any) => {
-	userDialogRef.value.openDialog(type, row);
+const onOpenEditUser = (type: string, selectd: number, row: any) => {
+	userDialogRef.value.openDialog(type, selectd, row);
 };
 // 删除用户
 const onRowDel = (row: any) => {
@@ -135,6 +159,9 @@ const formatDate = (date: any) => {
 	const localDate = new Date(date);
 	return localDate.toLocaleString(); // 使用浏览器的本地时间格式
 }
+const selectedType = () => {
+	getTableData();
+}
 
 // 页面加载时
 onMounted(() => {
@@ -153,5 +180,8 @@ onMounted(() => {
 			flex: 1;
 		}
 	}
+}
+.el-radio-group {
+	font-size: var(--el-font-size-base);
 }
 </style>

@@ -9,9 +9,9 @@ import request from '/@/utils/request';
  */
 export function useDetailsApi() {
 	return {
-		getPage: (params?: object) => {
+		getPage: (id: number, params?: object) => {
 			return request({
-				url: '/api/details/page',
+				url: '/api/details/page/' + id,
 				method: 'get',
 				params,
 			});
@@ -22,9 +22,9 @@ export function useDetailsApi() {
 				method: 'get',
 			});
 		},
-		listBySid: (sid: number) => {
+		listBySid: (id: number, sid: number) => {
 			return request({
-				url: '/api/details/list/' + sid,
+				url: '/api/details/list/' + id + "/" + sid,
 				method: 'get',
 			});
 		},

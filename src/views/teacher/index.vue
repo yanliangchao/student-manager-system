@@ -32,8 +32,11 @@
 						<el-tag v-for="(v, k) in scope.row.class" :key="k">{{ v.class_id }} / {{ v.subject }}</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" width="100">
+				<el-table-column label="操作" width="150">
 					<template #default="scope">
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="success" @click="onOpenDetails(scope.row)"
+							>违纪</el-button
+						>
 						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
 							>修改</el-button
 						>
@@ -56,6 +59,7 @@
 			</el-pagination>
 		</el-card>
 		<UserDialog ref="userDialogRef" @refresh="getTableData()" />
+		<DetailsDialog ref="detailsDialogRef" @refresh="getTableData()" />
 	</div>
 </template>
 
@@ -66,9 +70,11 @@ import { useTeacherApi } from '/@/api/teacher';
 
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/teacher/dialog.vue'));
+const DetailsDialog = defineAsyncComponent(() => import('/@/views/teacher/details.vue'));
 
 // 定义变量内容
 const userDialogRef = ref();
+const detailsDialogRef = ref();
 const state = reactive<TeacherState>({
 	tableData: {
 		data: [],
@@ -95,6 +101,10 @@ const getTableData = () => {
 		state.tableData.loading = false;
 	}, 500);
 };
+// 打开详情弹窗
+const onOpenDetails = (row: StudentType) => {
+	detailsDialogRef.value.openDialog(row)
+}
 // 打开新增用户弹窗
 const onOpenAddUser = (type: string) => {
 	userDialogRef.value.openDialog(type);
