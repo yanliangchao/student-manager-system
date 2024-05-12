@@ -48,7 +48,7 @@
 			</el-col>
 		</el-form-item> -->
 		<el-form-item class="login-animation4">
-			<el-button type="primary" class="login-content-submit" round v-waves @click="onSignIn" :loading="state.loading.signIn">
+			<el-button type="primary" class="login-content-submit" round v-waves @click="onSignIn" @keyup.enter="keyUp" :loading="state.loading.signIn">
 				<span>{{ $t('message.account.accountBtnText') }}</span>
 			</el-button>
 		</el-form-item>
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts" name="loginAccount">
-import { reactive, computed } from 'vue';
+import { reactive, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
@@ -145,6 +145,25 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 	}
 	state.loading.signIn = false;
 };
+
+//点击回车键登录
+const keyUp = (e: { keyCode: number; }) => {
+	if (e.keyCode == 13 || e.keyCode == 100) {
+		onSignIn()
+	}
+}
+
+
+onMounted(() => {
+	//绑定监听事件
+	window.addEventListener('keyup', keyUp)
+})
+
+onUnmounted(() => {
+	//销毁事件
+	window.removeEventListener('keyup', keyUp, false)
+});
+
 </script>
 
 <style scoped lang="scss">
