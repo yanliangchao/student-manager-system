@@ -122,12 +122,6 @@ const handleCurrentChange = (val: any) => {
 	getTeacherCount(val.id);
 	getDormitoryCount(val.id);
 	getClassCount(val.id);
-	setTimeout(() => {
-		initDormitoryBarChart();
-	}, 1000);
-	setTimeout(() => {
-		initClassBarChart();
-	}, 1000);
 }
 
 const getSchoolCount = () => {
@@ -146,12 +140,18 @@ const getTeacherCount = (id: number) => {
 const getDormitoryCount = (id: number) => {
 	useHomeApi().getDormitoryCount(id).then((res) => {
 		state.dormitoryCount = res.data
+		setTimeout(() => {
+			initDormitoryBarChart();
+		}, 1000);
 	}) 
 }
 
 const getClassCount = (id: number) => {
 	useHomeApi().getClassCount(id).then((res) => {
 		state.classCount = res.data
+		setTimeout(() => {
+			initClassBarChart();
+		}, 1000);
 	}) 
 }
 
