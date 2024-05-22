@@ -148,7 +148,7 @@ const signInSuccess = (isNoPower: boolean | undefined) => {
 
 //点击回车键登录
 const keyUp = (e: { keyCode: number; }) => {
-	if (e.keyCode == 13 || e.keyCode == 100) {
+	if (e.keyCode == 13) {
 		onSignIn()
 	}
 }

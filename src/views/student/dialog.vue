@@ -14,9 +14,10 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="学校" prop="sid">
-							<el-select v-model="state.ruleForm.sid" placeholder="请选择学校" filterable clearable class="w100">
-								<el-option v-for="item in state.schools" :key="item.value" :label="item.label" :value="item.value" />
+						<el-form-item label="性别" prop="gender">
+							<el-select v-model="state.ruleForm.gender" placeholder="请选择性别" filterable clearable class="w100">
+								<el-option key="0" label="男" value="0" />
+								<el-option key="1" label="女" value="1" />
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -73,8 +74,6 @@
 
 <script setup lang="ts" name="classDialog">
 import { reactive, ref, nextTick } from 'vue';
-import { useSchoolApi } from '/@/api/school';
-import { useDormitoryApi } from '/@/api/dormitory';
 import { useClassApi } from '/@/api/class';
 import { useStudentApi } from '/@/api/student';
 import { ElMessage, FormRules, FormInstance } from 'element-plus';
@@ -94,8 +93,7 @@ const state = reactive({
 		mother: '',
 		mother_iphone: '',
 		cid: null,
-		did: null,
-		sid: null,
+		gender: null,
 		//school_name: '', // 账户名称
 		// userNickname: '', // 用户昵称
 		// roleSign: '', // 关联角色
@@ -108,7 +106,6 @@ const state = reactive({
 		// status: true, // 用户状态
 		// describe: '', // 用户描述
 	},
-	schools: [] as SelectOptionType[],
 	classs: [] as SelectOptionType[],
 	//dormitorys: [] as SelectOptionType[],
 	dialog: {
@@ -127,8 +124,8 @@ const rules = reactive<FormRules<StudentType>>({
 	iphone: [
 		{ required: true, message: 'Please input iphone', trigger: 'blur' },
 	],
-	sid: [
-		{ required: true, message: 'Please input school', trigger: 'blur' },
+	gender: [
+		{ required: true, message: 'Please select gender', trigger: 'blur' },
 	],
 })
 
@@ -152,12 +149,10 @@ const openDialog = (type: string, row: StudentType) => {
 		});
 	}
 	nextTick(() => {
-		state.schools = [];
 		state.classs = [];
 		//state.dormitorys = [];
 		//getDormitoryData();
 		getClassData();
-		getSchoolData();
 	})
 	//getMenuData();
 };
@@ -202,18 +197,7 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 	})
 	
 };
-// 获取学校下拉框
-const getSchoolData = () => {
-	if(state.schools.length > 0) return;
-	useSchoolApi().list().then((res) => {
-		res.data.forEach((s: { id: number; school_name: string; }) => {
-			state.schools.push({
-				label: s.school_name,
-				value: s.id,
-			})
-		});
-	})
-}
+
 // 获取班级下拉框
 const getClassData = () => {
 	if(state.classs.length > 0) return;

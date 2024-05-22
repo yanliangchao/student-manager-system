@@ -19,6 +19,11 @@
 			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column type="index" label="序号" width="60" />
 				<el-table-column prop="name" label="姓名" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="gender" label="性别" show-overflow-tooltip>
+					<template #default="scope">
+						{{ scope.row.gender == 1 ? '女' : '男' }}
+					</template>
+				</el-table-column>
 				<el-table-column prop="iphone" label="手机" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="address" label="地址" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>

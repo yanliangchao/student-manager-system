@@ -9,21 +9,20 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="楼层" prop="storey">
+							<el-input v-model="state.ruleForm.storey" placeholder="请输入楼层" clearable></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="寝室号" prop="name">
 							<el-input v-model="state.ruleForm.name" placeholder="请输入寝室号" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="学校名" prop="sid">
-							<el-select v-model="state.ruleForm.sid" placeholder="请选择学校" filterable clearable class="w100">
-								<el-option v-for="item in state.schools" :key="item.value" :label="item.label" :value="item.value" />
-							</el-select>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="生活老师" prop="tid">
-							<el-select v-model="state.ruleForm.tid" placeholder="请选择生活老师" filterable clearable class="w100">
-								<el-option v-for="item in state.teachers" :key="item.value" :label="item.label" :value="item.value" />
+						<el-form-item label="性别" prop="gender">
+							<el-select v-model="state.ruleForm.gender" placeholder="请选择性别" filterable clearable class="w100">
+								<el-option key="0" label="男寝" value="0" />
+								<el-option key="1" label="女寝" value="1" />
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -41,8 +40,6 @@
 
 <script setup lang="ts" name="classDialog">
 import { reactive, ref, nextTick } from 'vue';
-import { useSchoolApi } from '/@/api/school';
-import { useTeacherApi } from '/@/api/teacher';
 import { useDormitoryApi } from '/@/api/dormitory';
 import { ElMessage, FormRules, FormInstance } from 'element-plus';
 
@@ -56,8 +53,9 @@ const state = reactive({
 		building: '',
 		name: '',
 		tid: null,
+		storey: '',
+		gender: '',
 		//name: '',
-		sid: null,
 	},
 	schools: [] as SelectOptionType[],
 	teachers: [] as SelectOptionType[],
@@ -75,10 +73,10 @@ const rules = reactive<FormRules<DormitoryType>>({
 		{ required: true, message: 'Please input building', trigger: 'blur' },
 	],
 	name: [
-		{ required: true, message: 'Please input code', trigger: 'blur' },
+		{ required: true, message: 'Please input name', trigger: 'blur' },
 	],
-	sid: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
+	storey: [
+		{ required: true, message: 'Please input storey', trigger: 'blur' },
 	],
 })
 
@@ -101,12 +99,6 @@ const openDialog = (type: string, row: DormitoryType) => {
 			dormitoryDialogFormRef.value.resetFields();
 		});
 	}
-	nextTick(() => {
-		state.schools = [];
-		state.teachers = [];
-		getSchoolData();
-		getTeacherData();
-	})
 	//getMenuData();
 };
 // 关闭弹窗
@@ -150,30 +142,6 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 	})
 	
 };
-// 获取学校下拉框
-const getSchoolData = () => {
-	if(state.schools.length > 0) return;
-	useSchoolApi().list().then((res) => {
-		res.data.forEach((s: { id: number; school_name: string; }) => {
-			state.schools.push({
-				label: s.school_name,
-				value: s.id,
-			})
-		});
-	})
-}
-// 获取老师下拉框
-const getTeacherData = () => {
-	if(state.teachers.length > 0) return;
-	useTeacherApi().list().then((res) => {
-		res.data.forEach((t: { id: number; teacher_name: string; }) => {
-			state.teachers.push({
-				label: t.teacher_name,
-				value: t.id,
-			})
-		});
-	})
-}
 
 // 暴露变量
 defineExpose({

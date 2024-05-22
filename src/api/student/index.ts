@@ -23,9 +23,9 @@ export function useStudentApi() {
 				params,
 			});
 		},
-		list: () => {
+		list: (gid: number) => {
 			return request({
-				url: '/api/student/list',
+				url: '/api/student/list/' + gid,
 				method: 'get',
 			});
 		},

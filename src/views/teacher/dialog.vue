@@ -18,13 +18,6 @@
 							<el-input v-model="state.ruleForm.level" placeholder="请输入手机号" clearable></el-input>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="学校名" prop="sid">
-							<el-select v-model="state.ruleForm.sid" placeholder="请选择学校" filterable clearable class="w100">
-								<el-option v-for="item in state.schools" :key="item.value" :label="item.label" :value="item.value" />
-							</el-select>
-						</el-form-item>
-					</el-col>
 					<!-- <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="所教科目" prop="subjects">
 							<el-select v-model="state.ruleForm.subjects" placeholder="请选择所教科目" multiple filterable clearable class="w100">
@@ -62,6 +55,7 @@ const state = reactive({
 		level: '',
 		sid: null
 	},
+	disabled: false,
 	schools: [] as SelectOptionType[],
 	dialog: {
 		loading: false,
@@ -102,10 +96,7 @@ const openDialog = (type: string, row: TeacherType) => {
 			schoolDialogFormRef.value.resetFields();
 		});
 	}
-	nextTick(() => {
-		state.schools = [];
-		getSchoolData();
-	})
+	
 	//getMenuData();
 };
 // 关闭弹窗
@@ -139,19 +130,6 @@ const onSubmit = () => {
 		})
 	}
 };
-// 获取学校下拉框
-const getSchoolData = () => {
-	if(state.schools.length > 0) return;
-	useSchoolApi().list().then((res) => {
-		res.data.forEach((s: { id: number; school_name: string; }) => {
-			state.schools.push({
-				label: s.school_name,
-				value: s.id,
-			})
-		});
-	})
-}
-
 
 // 暴露变量
 defineExpose({

@@ -22,6 +22,12 @@ export function useUserApi() {
 				method: 'get',
 			});
 		},
+		findByUsername: (username: string) => {
+			return request({
+				url: '/api/user/' + username,
+				method: 'get',
+			});
+		},
 		add: (data: object) => {
 			return request({
 				url: '/api/user/add',

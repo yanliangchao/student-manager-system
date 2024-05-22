@@ -4,27 +4,28 @@
 			<el-form ref="dormitoryDialogFormRef" :rules="rules" :model="state.ruleForm" size="default" label-width="90px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="寝室" prop="did">
-							<el-select v-model="state.ruleForm.did" placeholder="请选择寝室" filterable clearable class="w100">
-								<el-option v-for="item in state.dormitorys" :key="item.value" :label="item.label" :value="item.value" />
-							</el-select>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="床号" prop="number">
 							<el-input v-model="state.ruleForm.number" placeholder="请输入床号" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="姓名" prop="sid">
+						<el-form-item label="时间" prop="times">
+							<el-date-picker v-model="state.ruleForm.times" type="datetime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DDTHH:mm:ss.000Z" placeholder="Select date and time" class="w100"/>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="学生" prop="sid">
 							<el-select v-model="state.ruleForm.sid" placeholder="请选择学生" filterable clearable class="w100">
 								<el-option v-for="item in state.students" :key="item.value" :label="item.label" :value="item.value" />
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="时间" prop="times">
-							<el-date-picker v-model="state.ruleForm.times" type="datetime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DDTHH:mm:ss.000Z" placeholder="Select date and time"/>
+						<el-form-item label="角色" prop="sid">
+							<el-select v-model="state.ruleForm.owner" placeholder="请选择角色" filterable clearable class="w100">
+								<el-option key="0" label="成员" value="0" />
+								<el-option key="1" label="寝室长" value="1" />
+							</el-select>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -56,16 +57,17 @@ const state = reactive({
 		number: '',
 		did: null,
 		//name: '',
-		sid: null,
+		owner: '',
+		sid: '',
 	},
 	students: [] as SelectOptionType[],
-	dormitorys: [] as SelectOptionType[],
 	dialog: {
 		loading: false,
 		isShowDialog: false,
 		type: '',
 		title: '',
 		submitTxt: '',
+		data: {} as any,
 	},
 });
 
@@ -76,8 +78,8 @@ const rules = reactive<FormRules>({
 	number: [
 		{ required: true, message: 'Please input number', trigger: 'blur' },
 	],
-	did: [
-		{ required: true, message: 'Please input dormitory name', trigger: 'blur' },
+	owner: [
+		{ required: true, message: 'Please select role', trigger: 'blur' },
 	],
 	sid: [
 		{ required: true, message: 'Please input student name', trigger: 'blur' },
@@ -85,10 +87,10 @@ const rules = reactive<FormRules>({
 })
 
 // 打开弹窗
-const openDialog = (type: string, row: DormitoryType) => {
+const openDialog = (row: DormitoryType) => {
 	//dormitoryDialogFormRef.value.resetFields();
 	state.dialog.isShowDialog = true;
-
+	state.dialog.data = row;
 	state.dialog.title = '加入学生';
 	state.dialog.submitTxt = '加 入';
 		// 清空表单，此项需加表单验证才能使用
@@ -97,8 +99,6 @@ const openDialog = (type: string, row: DormitoryType) => {
 		});
 	
 	nextTick(() => {
-		state.dormitorys = [];
-		getDormitoryData();
 		state.students = [];
 		getStudentData();
 	})
@@ -120,6 +120,7 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 	if (!formEl) return
 	formEl.validate((valid, fields) => {
 		if (valid) {
+			state.ruleForm.did = state.dialog.data.id;
 			useDormitoryApi().addStu(state.ruleForm).then((res) => {
 				ElMessage.success(res.message);
 				state.dialog.loading = false;
@@ -138,22 +139,10 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 // 获取学生下拉框
 const getStudentData = () => {
 	if(state.students.length > 0) return;
-	useStudentApi().list().then((res) => {
+	useStudentApi().list(state.dialog.data.gender).then((res) => {
 		res.data.forEach((t: { id: number; name: string; }) => {
 			state.students.push({
 				label: t.name,
-				value: t.id,
-			})
-		});
-	})
-}
-// 获取寝室下拉框
-const getDormitoryData = () => {
-	if(state.dormitorys.length > 0) return;
-	useDormitoryApi().list().then((res) => {
-		res.data.forEach((t: { id: number; building:string, name: string; }) => {
-			state.dormitorys.push({
-				label: t.building + ' - ' + t.name,
 				value: t.id,
 			})
 		});

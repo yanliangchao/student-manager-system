@@ -24,6 +24,7 @@
 			</div>
 			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column type="index" label="序号" width="60" />
+				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="class_id" label="班级号" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="class_name" label="班级名" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="subjects" label="主修科目" show-overflow-tooltip>
@@ -45,20 +46,7 @@
 						<el-button size="small" text type="primary" @click="getStudentByCid(scope.row)" :disabled="Number(scope.row.sidCount) === -1">{{ scope.row.sidCount }}</el-button>
 					</template>
 				</el-table-column>
-				<el-table-column prop="school_name" label="学校名称" show-overflow-tooltip></el-table-column>
-				<!-- <el-table-column prop="userNickname" label="用户昵称" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="roleSign" label="关联角色" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="department" label="部门" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="phone" label="手机号" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="email" label="邮箱" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="status" label="用户状态" show-overflow-tooltip>
-					<template #default="scope">
-						<el-tag type="success" v-if="scope.row.status">启用</el-tag>
-						<el-tag type="info" v-else>禁用</el-tag>
-					</template>
-				</el-table-column>
-				<el-table-column prop="describe" label="用户描述" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column> -->
+				
 				<el-table-column label="操作" width="100">
 					<template #default="scope">
 						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"

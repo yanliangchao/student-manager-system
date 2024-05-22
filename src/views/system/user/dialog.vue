@@ -31,6 +31,21 @@
 							</el-input>
 						</el-form-item>
 					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="学校名" prop="sid">
+							<el-select v-model="state.ruleForm.sid" placeholder="请选择学校" filterable clearable class="w100" :disabled="state.disabled">
+								<el-option v-for="item in state.schools" :key="item.value" :label="item.label" :value="item.value" />
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="角色" prop="role">
+							<el-select v-model="state.ruleForm.role" placeholder="请选择角色" filterable clearable class="w100" :disabled="state.disabled">
+								<el-option key="manager" label="manager" value="manager" />
+								<el-option key="user" label="user" value="user" />
+							</el-select>
+						</el-form-item>
+					</el-col>
 				</el-row>
 			</el-form>
 			<template #footer>
@@ -47,18 +62,28 @@
 import { reactive, ref, nextTick } from 'vue';
 import { ElMessage, FormRules, FormInstance } from 'element-plus';
 import { useUserApi } from '/@/api/user';
+import { useSchoolApi } from '/@/api/school';
+import { useUserInfo } from '/@/stores/userInfo';
+import { storeToRefs } from 'pinia';
+
 
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
 
 // 定义变量内容
+const stores = useUserInfo();
+const { userInfos } = storeToRefs(stores);
 const userDialogFormRef = ref();
 const state = reactive({
 	isShowPassword: false,
+	disabled: false,
 	ruleForm: {
 		username: '', // 账户名称
-		password: '', // 用户昵称
+		password: '', // 
+		sid: null,
+		role: '',
 	},
+	schools: [] as SelectOptionType[],
 	dialog: {
 		isShowDialog: false,
 		loading: false,
@@ -70,14 +95,25 @@ const state = reactive({
 
 const rules = reactive<FormRules<RowUserType>>({
 	username: [
-		{ required: true, message: 'Please input school name', trigger: 'blur' },
-	]
+		{ required: true, message: 'Please input username', trigger: 'blur' },
+	],
+	sid: [
+		{ required: true, message: 'Please select school', trigger: 'blur' },
+	],
+	role: [
+		{ required: true, message: 'Please select role', trigger: 'blur' },
+	],
 })
 
 // 打开弹窗
 const openDialog = (type: string, row: RowUserType) => {
 	state.dialog.type = type;
 	state.dialog.isShowDialog = true;
+	if(userInfos.value.roles[0] === 'manager') {
+		state.ruleForm.role = 'user'
+		state.ruleForm.sid = userInfos.value.school
+		state.disabled = true
+	}
 	if (type === 'edit') {
 		state.ruleForm = JSON.parse(JSON.stringify(row));
 		state.dialog.title = '修改用户';
@@ -90,6 +126,10 @@ const openDialog = (type: string, row: RowUserType) => {
 			userDialogFormRef.value.resetFields();
 		});
 	}
+	nextTick(() => {
+		state.schools = [];;
+		getSchoolData();
+	})
 	
 };
 // 关闭弹窗
@@ -130,6 +170,19 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 		}
 	})
 };
+
+// 获取学校下拉框
+const getSchoolData = () => {
+	if(state.schools.length > 0) return;
+	useSchoolApi().list().then((res) => {
+		res.data.forEach((s: { id: number; school_name: string; }) => {
+			state.schools.push({
+				label: s.school_name,
+				value: s.id,
+			})
+		});
+	})
+}
 
 // 暴露变量
 defineExpose({

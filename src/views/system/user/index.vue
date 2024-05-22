@@ -21,6 +21,8 @@
 					<el-table :data="state.tableData.data" v-loading="state.tableData.loading" highlight-current-row  @current-change="handleCurrentChange" style="width: 100%">
 						<el-table-column type="index" label="序号" width="60" />
 						<el-table-column prop="username" label="用户名" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="role" label="权限" show-overflow-tooltip></el-table-column>
 						<el-table-column label="操作" width="100">
 							<template #default="scope">
 								<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
@@ -34,13 +36,13 @@
 				<el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8" class="mb20">
 					<el-form ref="userDialogFormRef" :model="state.ruleForm" size="small" label-position="top" label-width="90px">
 						<div class="selectRole">
-							<h4>学校权限</h4>
+							<h4>用户权限</h4>
 							<el-button type="primary" size="small" :disabled="state.tableData.disabled" @click="onChangeRoles()">保存修改</el-button>
 						</div>
 						<el-form-item>
-							<el-checkbox-group v-model="state.ruleForm.sids">
-								<div v-for="(v, k) in state.tableData.schoolData" :key="k">
-									<el-checkbox :value="v.id" :label="v.school_name" />
+							<el-checkbox-group v-model="state.ruleForm.dids">
+								<div v-for="(v, k) in state.tableData.dormitoryData" :key="k">
+									<el-checkbox :value="v.id" :label="v.building + '-' + v.storey + '-' + v.name" />
 								</div>
 							</el-checkbox-group>
 						</el-form-item>
@@ -71,12 +73,16 @@
 import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { useUserApi } from '/@/api/user';
-import { useSchoolApi } from '/@/api/school';
+import { useDormitoryApi } from '/@/api/dormitory';
+import { useUserInfo } from '/@/stores/userInfo';
+import { storeToRefs } from 'pinia';
 
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/system/user/dialog.vue'));
 
 // 定义变量内容
+const stores = useUserInfo();
+const { userInfos } = storeToRefs(stores);
 const userDialogRef = ref();
 const state = reactive<SysUserState>({
 	tableData: {
@@ -84,7 +90,7 @@ const state = reactive<SysUserState>({
 		total: 0,
 		loading: false,
 		disabled: true,
-		schoolData: [],
+		dormitoryData: [],
 		param: {
 			search: '',
 			pageNum: 1,
@@ -93,7 +99,7 @@ const state = reactive<SysUserState>({
 	},
 	ruleForm: {
 		uid: 0,
-		sids: [],
+		dids: [],
 	}
 });
 
@@ -144,18 +150,30 @@ const onHandleCurrentChange = (val: number) => {
 	state.tableData.param.pageNum = val;
 	getTableData();
 };
-// 获取全部学校
-const getSchoolData = () => (
-	useSchoolApi().list().then((res) => {
-		state.tableData.schoolData = res.data;
+
+// 获取全部寝室权限
+const getDormitoryData = () => (
+	useDormitoryApi().list().then((res) => {
+		state.tableData.dormitoryData = res.data;
 	})
 )
+
+// 获取全部寝室权限
+const getDormitoryDataBySid = async (sid: number) => (
+	await useDormitoryApi().listBySid(sid).then((res) => {
+		state.tableData.dormitoryData = res.data;
+	})
+)
+
 // 选择用户行
-const handleCurrentChange = (val: RowUserType) => {
-  state.ruleForm.sids = [];
+const handleCurrentChange = async (val: RowUserType) => {
+  if(userInfos.value.username === 'admin' && val?.sid) {
+	await getDormitoryDataBySid(val.sid)
+  }
+  state.ruleForm.dids = [];
   state.ruleForm.uid = val?.id;
   state.tableData.disabled = false;
-  val?.sids.forEach((sid: {sid: number}) => state.ruleForm.sids.push(sid.sid))
+  val?.dids.forEach((did: {did: number}) => state.ruleForm.dids.push(did.did))
 }
 
 // 保存修改的权限
@@ -169,7 +187,7 @@ const onChangeRoles = () => {
 // 页面加载时
 onMounted(() => {
 	getTableData();
-	getSchoolData();
+	getDormitoryData();
 });
 </script>
 

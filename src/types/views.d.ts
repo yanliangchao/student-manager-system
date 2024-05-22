@@ -85,7 +85,10 @@ declare type TreeType = {
 declare type RowUserType<T = any> = {
 	id: number;
 	username: string;
-	sids: []
+	password: string;
+	sid: number;
+	dids: [],
+	role: string;
 	// userNickname: string;
 	// roleSign: string;
 	// department: string[];
@@ -101,7 +104,7 @@ declare type RowUserType<T = any> = {
 
 declare type FormUserType<T = any> = {
 	uid: number;
-	sids: number[];
+	dids: number[];
 	// userNickname: string;
 	// roleSign: string;
 	// department: string[];
@@ -117,7 +120,7 @@ declare type FormUserType<T = any> = {
 
 interface SysUserTableType extends TableType {
 	data: RowUserType[];
-	schoolData: SchoolType[];
+	dormitoryData: DormitoryType[];
 	disabled: boolean;
 }
 
@@ -181,6 +184,7 @@ declare type DormitoryType<T = any> = {
 	id: number;
 	building: string;
 	name: string;
+	storey: string;
 	manager: string;
 	sid: number;
 	sidCount: number
@@ -207,6 +211,7 @@ declare type StudentType<T = any> = {
 	cid: number,
 	did: number,
 	sid: number,
+	gender: number,
 }
 
 interface StudentTableType extends TableType {

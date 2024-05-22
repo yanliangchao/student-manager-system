@@ -15,19 +15,26 @@
 					</el-icon>
 					新增寝室
 				</el-button>
-				<el-button size="default" type="warning" class="ml10" @click="onOpenAddStu()">
-					<el-icon>
-						<ele-FolderAdd />
-					</el-icon>
-					加入学生
-				</el-button>
 			</div>
 			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column type="index" label="序号" width="60" />
 				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="building" label="楼栋" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="storey" label="楼层" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="gender" label="性别" show-overflow-tooltip>
+					<template #default="scope">
+						{{ scope.row.gender == 1 ? '女寝' : '男寝' }}
+					</template>
+				</el-table-column>
 				<el-table-column prop="name" label="寝室号" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="ttc_name" label="管理教师" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="ttc_name" label="管理教师" show-overflow-tooltip>
+					<template #default="scope">
+						<el-text class="mx-1" :type="getColor.get((k + 1)%5)" v-for="(v, k) in scope.row.manager" :key="k" >
+							{{ v.name }}
+							<span v-if="k < scope.row.manager.length - 1"> | </span>
+						</el-text>
+					</template>
+				</el-table-column>
 				<el-table-column prop="sidCount" label="学生" show-overflow-tooltip>
 					<template #default="scope">
 						<el-button size="small" text type="primary" @click="getStudentByDid(scope.row)" :disabled="Number(scope.row.sidCount) === -1">{{ scope.row.sidCount }}</el-button>
@@ -58,7 +65,7 @@
 		</el-card>
 		<UserDialog ref="userDialogRef" @refresh="getTableData()" />
 		<StuDialog ref="stuDialogRef"/>
-		<AddStuDialog ref="addStuDialogRef" @refresh="getTableData()" />
+
 	</div>
 </template>
 
@@ -70,12 +77,12 @@ import { useDormitoryApi } from '/@/api/dormitory';
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/dormitory/dialog.vue'));
 const StuDialog = defineAsyncComponent(() => import('/@/views/dormitory/stuDetails.vue'));
-const AddStuDialog = defineAsyncComponent(() => import('/@/views/dormitory/addStuDialog.vue'));
+
 
 // 定义变量内容
 const userDialogRef = ref();
 const stuDialogRef = ref();
-const addStuDialogRef = ref();
+
 const state = reactive<DormitoryState>({
 	tableData: {
 		data: [],
@@ -111,10 +118,7 @@ const onOpenAddUser = (type: string) => {
 const onOpenEditUser = (type: string, row: DormitoryType) => {
 	userDialogRef.value.openDialog(type, row);
 };
-//打开新增学生弹窗
-const onOpenAddStu = () => {
-	addStuDialogRef.value.openDialog()
-}
+
 // 删除用户
 const onRowDel = (row: DormitoryType) => {
 	ElMessageBox.confirm(`此操作将永久删除寝室：“${row.building} - ${row.name}”，是否继续?`, '提示', {
@@ -145,6 +149,16 @@ const onHandleCurrentChange = (val: number) => {
 const getStudentByDid = (row: ClassType) => {
 	stuDialogRef.value.openDialog(row);
 }
+
+// 获取随机颜色
+const getColor = new Map([
+	[1, 'primary'],
+	[2, 'success'],
+	[3, 'info'],
+	[4, 'warning'],
+	[5, 'danger'],
+])
+
 // 页面加载时
 onMounted(() => {
 	getTableData();

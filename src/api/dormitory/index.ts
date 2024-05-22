@@ -15,6 +15,12 @@ export function useDormitoryApi() {
 				method: 'get',
 			});
 		},
+		listBySid: (sid: number) => {
+			return request({
+				url: '/api/dormitory/list/' + sid,
+				method: 'get',
+			});
+		},
 		getStuByid: (id: number) => {
 			return request({
 				url: '/api/dormitory/list/stu/' +id,

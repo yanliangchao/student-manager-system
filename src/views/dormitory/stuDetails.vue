@@ -1,9 +1,20 @@
 <template>
 	<div class="system-user-dialog-container">
 		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="80%">
+			<template #header="{ titleId, titleClass }">
+                <div class="my-header">
+                    <h4 :id="titleId" :class="titleClass">{{ state.dialog.title }}</h4>
+                    <el-button type="primary" size="small" @click="onOpenAddStu()">加入学生</el-button>
+                </div>
+            </template>
             <el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
                 <el-table-column type="index" label="序号" width="60" />
                 <el-table-column prop="name" label="姓名" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="gender" label="性别" show-overflow-tooltip>
+					<template #default="scope">
+						{{ scope.row.gender == 1 ? '女' : '男' }}
+					</template>
+				</el-table-column>
                 <el-table-column prop="iphone" label="手机" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="address" label="地址" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="class_name" label="班级" show-overflow-tooltip></el-table-column>
@@ -28,6 +39,7 @@
             </el-table>
 		</el-dialog>
 	</div>
+	<AddStuDialog ref="addStuDialogRef" @refresh="getTableData()" />
 </template>
 
 <script setup lang="ts" name="classDialog">
@@ -35,11 +47,13 @@ import { reactive, ref, nextTick, defineAsyncComponent } from 'vue';
 import { useDormitoryApi } from '/@/api/dormitory';
 import { ElMessage, FormRules, FormInstance, ElMessageBox } from 'element-plus';
 
+const AddStuDialog = defineAsyncComponent(() => import('/@/views/dormitory/addStuDialog.vue'));
 
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
 
 // 定义变量内容
+const addStuDialogRef = ref();
 const state = reactive({
 	tableData: {
 		data: [],
@@ -84,6 +98,11 @@ const openDialog = (row: DormitoryType) => {
 	})
 	//getMenuData();
 };
+
+//打开新增学生弹窗
+const onOpenAddStu = () => {
+	addStuDialogRef.value.openDialog(state.dialog.data)
+}
 
 // 设置寝室长
 const onSetOwner = (row: any) => {
@@ -134,3 +153,11 @@ defineExpose({
 	openDialog,
 });
 </script>
+<style scoped>
+.my-header {
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-between; */
+  gap: 16px;
+}
+</style>

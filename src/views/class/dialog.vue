@@ -20,13 +20,13 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+					<!-- <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="学校名" prop="sid">
-							<el-select v-model="state.ruleForm.sid" placeholder="请选择学校" filterable clearable class="w100">
+							<el-select v-model="state.ruleForm.sid" placeholder="请选择学校" filterable clearable class="w100" :disabled="state.disabled">
 								<el-option v-for="item in state.schools" :key="item.value" :label="item.label" :value="item.value" />
 							</el-select>
 						</el-form-item>
-					</el-col>
+					</el-col> -->
 				</el-row>
 			</el-form>
 			<template #footer>
@@ -72,6 +72,7 @@ const state = reactive({
 	},
 	schools: [] as SelectOptionType[],
 	teachers: [] as SelectOptionType[],
+	disabled: false,
 	dialog: {
 		loading: false,
 		isShowDialog: false,
@@ -113,10 +114,8 @@ const openDialog = (type: string, row: ClassType) => {
 		});
 	}
 	nextTick(() => {
-		state.schools = [];
 		state.teachers = [];
 		getTeacherData();
-		getSchoolData();
 	})
 	//getMenuData();
 };
@@ -161,18 +160,7 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 	})
 	
 };
-// 获取学校下拉框
-const getSchoolData = () => {
-	if(state.schools.length > 0) return;
-	useSchoolApi().list().then((res) => {
-		res.data.forEach((s: { id: number; school_name: string; }) => {
-			state.schools.push({
-				label: s.school_name,
-				value: s.id,
-			})
-		});
-	})
-}
+
 // 获取老师下拉框
 const getTeacherData = () => {
 	if(state.teachers.length > 0) return;
