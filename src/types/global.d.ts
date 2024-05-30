@@ -100,6 +100,17 @@ declare type SelectOptionType = {
 	label: string | number;
 };
 
+declare type Public = {
+	number: number;
+	reason: string;
+};
+
+
+declare type Personal = {
+	sid: number;
+	publics: Public[];
+};
+
 // 鼠标滚轮滚动类型
 declare interface WheelEventType extends WheelEvent {
 	wheelDelta: number;

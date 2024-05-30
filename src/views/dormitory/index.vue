@@ -2,46 +2,68 @@
 	<div class="system-user-container layout-padding">
 		<el-card shadow="hover" class="layout-padding-auto">
 			<div class="system-user-search mb15">
-				<el-input v-model="state.tableData.param.search" size="default" placeholder="请输入班级名称" style="max-width: 180px"> </el-input>
-				<el-button size="default" type="primary" class="ml10" @click="getTableData()">
-					<el-icon>
-						<ele-Search />
-					</el-icon>
-					查询
-				</el-button>
-				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('add')">
-					<el-icon>
-						<ele-FolderAdd />
-					</el-icon>
-					新增寝室
-				</el-button>
+				<el-row :gutter="35">
+					<el-col :xs="24" :sm="24" :md="12" :lg="8" :xl="8" class="mb20">
+						<el-input v-model="state.tableData.param.search" size="default" placeholder="请输入寝室信息" style="max-width: 200px"> </el-input>
+						<el-button size="default" type="primary" class="ml10" @click="getTableData()">
+							<el-icon>
+								<ele-Search />
+							</el-icon>
+							查询
+						</el-button>
+					</el-col>
+					<el-col :xs="24" :sm="24" :md="12" :lg="16" :xl="16" class="mb20">
+						<el-button size="default" type="success" @click="onOpenAddUser('add')">
+							<el-icon>
+								<ele-FolderAdd />
+							</el-icon>
+							新增寝室
+						</el-button>
+					</el-col>
+				</el-row>	
 			</div>
-			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
-				<el-table-column type="index" label="序号" width="60" />
-				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="building" label="楼栋" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="storey" label="楼层" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="gender" label="性别" show-overflow-tooltip>
+			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" size="small">
+				<template v-if="screenWidth">
+					<el-table-column type="index" label="序号" width="60" />
+					<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
+					<el-table-column prop="building" label="楼栋" show-overflow-tooltip></el-table-column>
+					<el-table-column prop="storey" label="楼层" show-overflow-tooltip></el-table-column>
+					<el-table-column prop="gender" label="性别" show-overflow-tooltip>
+						<template #default="scope">
+							{{ scope.row.gender == 1 ? '女寝' : '男寝' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="name" label="寝室号" show-overflow-tooltip></el-table-column>
+					<el-table-column prop="ttc_name" label="管理教师" show-overflow-tooltip>
+						<template #default="scope">
+							<el-text class="mx-1" :type="getColor.get((k + 1)%5)" v-for="(v, k) in scope.row.manager" :key="k" >
+								{{ v.name }}
+								<span v-if="k < scope.row.manager.length - 1"> | </span>
+							</el-text>
+						</template>
+					</el-table-column>
+					<el-table-column prop="number" label="床位" show-overflow-tooltip></el-table-column>
+					<el-table-column prop="sidCount" label="学生" show-overflow-tooltip>
+						<template #default="scope">
+							<el-button size="small" text type="primary" @click="getStudentByDid(scope.row)" :disabled="Number(scope.row.sidCount) === -1">{{ scope.row.sidCount }}</el-button>
+						</template>
+					</el-table-column>
+				</template>
+				<template v-else >
+					<el-table-column prop="class" label="寝室信息" show-overflow-tooltip>
+						<template #default="scope">
+							{{ scope.row.building }}-{{ scope.row.storey }}-{{ scope.row.name }} | {{ scope.row.gender == 1 ? '女寝' : '男寝' }}
+						</template>
+					</el-table-column>
+				</template>
+				<el-table-column label="操作" width="170">
 					<template #default="scope">
-						{{ scope.row.gender == 1 ? '女寝' : '男寝' }}
-					</template>
-				</el-table-column>
-				<el-table-column prop="name" label="寝室号" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="ttc_name" label="管理教师" show-overflow-tooltip>
-					<template #default="scope">
-						<el-text class="mx-1" :type="getColor.get((k + 1)%5)" v-for="(v, k) in scope.row.manager" :key="k" >
-							{{ v.name }}
-							<span v-if="k < scope.row.manager.length - 1"> | </span>
-						</el-text>
-					</template>
-				</el-table-column>
-				<el-table-column prop="sidCount" label="学生" show-overflow-tooltip>
-					<template #default="scope">
-						<el-button size="small" text type="primary" @click="getStudentByDid(scope.row)" :disabled="Number(scope.row.sidCount) === -1">{{ scope.row.sidCount }}</el-button>
-					</template>
-				</el-table-column>
-				<el-table-column label="操作" width="100">
-					<template #default="scope">
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="getManager(scope.row)"
+							>管理</el-button
+						>
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary"
+							>打印</el-button
+						>
 						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
 							>修改</el-button
 						>
@@ -65,24 +87,27 @@
 		</el-card>
 		<UserDialog ref="userDialogRef" @refresh="getTableData()" />
 		<StuDialog ref="stuDialogRef"/>
+		<MgDialog ref="mgDialogRef"/>
 
 	</div>
 </template>
 
 <script setup lang="ts" name="class">
-import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
+import { defineAsyncComponent, reactive, onMounted, ref, onUnmounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { useDormitoryApi } from '/@/api/dormitory';
 
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/dormitory/dialog.vue'));
 const StuDialog = defineAsyncComponent(() => import('/@/views/dormitory/stuDetails.vue'));
+const MgDialog = defineAsyncComponent(() => import('/@/views/dormitory/mgDetails.vue'));
 
 
 // 定义变量内容
 const userDialogRef = ref();
 const stuDialogRef = ref();
-
+const mgDialogRef = ref();
+const screenWidth  = ref(true);
 const state = reactive<DormitoryState>({
 	tableData: {
 		data: [],
@@ -93,7 +118,7 @@ const state = reactive<DormitoryState>({
 			pageNum: 1,
 			pageSize: 10,
 		},
-	},
+	}
 });
 
 // 初始化表格数据
@@ -150,6 +175,11 @@ const getStudentByDid = (row: ClassType) => {
 	stuDialogRef.value.openDialog(row);
 }
 
+// 获取管理弹窗显示
+const getManager= (row: ClassType) => {
+	mgDialogRef.value.openDialog(row);
+}
+
 // 获取随机颜色
 const getColor = new Map([
 	[1, 'primary'],
@@ -159,9 +189,19 @@ const getColor = new Map([
 	[5, 'danger'],
 ])
 
+// h获取屏幕宽度
+const handleResize = () => {
+  	screenWidth.value = window.innerWidth > 1200 ? true: false;
+}
+
 // 页面加载时
 onMounted(() => {
+	window.addEventListener('resize', handleResize);
 	getTableData();
+	handleResize();
+});
+onUnmounted(() => {
+	window.removeEventListener('resize', handleResize);
 });
 </script>
 

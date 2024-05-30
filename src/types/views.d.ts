@@ -187,7 +187,9 @@ declare type DormitoryType<T = any> = {
 	storey: string;
 	manager: string;
 	sid: number;
-	sidCount: number
+	sidCount: number;
+	number: number;
+	gender: number;
 	school_name: string;
 }
 

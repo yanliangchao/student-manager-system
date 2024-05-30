@@ -34,6 +34,13 @@ export function useDormitoryApi() {
 				data,
 			});
 		},
+		pingfen: (data: object) => {
+			return request({
+				url: '/api/dormitory/add/pingfen',
+				method: 'post',
+				data,
+			});
+		},
 		addStu: (data: object) => {
 			return request({
 				url: '/api/dormitory/add/stu',

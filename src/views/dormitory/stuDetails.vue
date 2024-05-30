@@ -12,7 +12,7 @@
                 <el-table-column prop="name" label="姓名" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="gender" label="性别" show-overflow-tooltip>
 					<template #default="scope">
-						{{ scope.row.gender == 1 ? '女' : '男' }}
+						{{ Number(scope.row.gender) === 1 ? '女' : '男' }}
 					</template>
 				</el-table-column>
                 <el-table-column prop="iphone" label="手机" show-overflow-tooltip></el-table-column>
@@ -90,6 +90,7 @@ const getTableData = () => {
 // 打开弹窗
 const openDialog = (row: DormitoryType) => {
 	//classDialogFormRef.value.resetFields();
+	console.log(row)
 	state.dialog.isShowDialog = true;
 	state.dialog.data = row
     state.dialog.title = `${row.school_name}-${row.building}-${row.name}寝室学生详情: (${row.sidCount})`;
@@ -101,6 +102,11 @@ const openDialog = (row: DormitoryType) => {
 
 //打开新增学生弹窗
 const onOpenAddStu = () => {
+
+	if(state.dialog.data.number === Number(state.dialog.data.sidCount)) {
+		ElMessage.warning("该寝室已住满!!!");
+		return
+	}
 	addStuDialogRef.value.openDialog(state.dialog.data)
 }
 

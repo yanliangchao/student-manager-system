@@ -23,11 +23,16 @@
 			<el-table v-if="!state.tableData.selectd" :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
 				<el-table-column type="index" label="序号" width="60" />
 				<el-table-column prop="name" label="学生" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="gender" label="性别" show-overflow-tooltip>
+					<template #default="scope">
+						{{ scope.row.gender == 1 ? '女' : '男' }}
+					</template>
+				</el-table-column>
 				<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="class_name" label="班级" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="dormitory_name" label="寝室" show-overflow-tooltip>
 					<template #default="scope">
-						{{ scope.row.building }} - {{  scope.row.dormitory_name }} - {{  scope.row.number }}
+						{{ scope.row.building }} - {{  scope.row.storey }} - {{  scope.row.dormitory_name }} | {{  scope.row.dormitory_gender == 1 ? '女寝' : '男寝'  }} | {{  scope.row.number }}
 					</template>
 				</el-table-column>
 				<el-table-column prop="times" label="时间" show-overflow-tooltip>
@@ -36,6 +41,8 @@
 					</template>
 				</el-table-column>
 				<el-table-column prop="describes" label="违纪" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="scope" label="扣分" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="username" label="操作人" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="100">
 					<template #default="scope">
 						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', state.tableData.selectd, scope.row)"

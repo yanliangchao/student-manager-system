@@ -139,7 +139,7 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 // 获取学生下拉框
 const getStudentData = () => {
 	if(state.students.length > 0) return;
-	useStudentApi().list(state.dialog.data.gender).then((res) => {
+	useStudentApi().listByDormitory(state.dialog.data.gender).then((res) => {
 		res.data.forEach((t: { id: number; name: string; }) => {
 			state.students.push({
 				label: t.name,

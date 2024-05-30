@@ -19,10 +19,15 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="床位" prop="number">
+							<el-input type="number" v-model="state.ruleForm.number" placeholder="请输入床位数量" clearable></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="性别" prop="gender">
 							<el-select v-model="state.ruleForm.gender" placeholder="请选择性别" filterable clearable class="w100">
-								<el-option key="0" label="男寝" value="0" />
-								<el-option key="1" label="女寝" value="1" />
+								<el-option key="0" label="男寝" :value="0" />
+								<el-option key="1" label="女寝" :value="1" />
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -55,6 +60,7 @@ const state = reactive({
 		tid: null,
 		storey: '',
 		gender: '',
+		number: '',
 		//name: '',
 	},
 	schools: [] as SelectOptionType[],
@@ -75,7 +81,13 @@ const rules = reactive<FormRules<DormitoryType>>({
 	name: [
 		{ required: true, message: 'Please input name', trigger: 'blur' },
 	],
+	number: [
+		{ required: true, message: 'Please input name', trigger: 'blur' },
+	],
 	storey: [
+		{ required: true, message: 'Please input storey', trigger: 'blur' },
+	],
+	gender: [
 		{ required: true, message: 'Please input storey', trigger: 'blur' },
 	],
 })

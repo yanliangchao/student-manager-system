@@ -23,7 +23,13 @@ export function useStudentApi() {
 				params,
 			});
 		},
-		list: (gid: number) => {
+		list: () => {
+			return request({
+				url: '/api/student/list',
+				method: 'get',
+			});
+		},
+		listByDormitory: (gid: number) => {
 			return request({
 				url: '/api/student/list/' + gid,
 				method: 'get',
