@@ -41,6 +41,13 @@ export function useDormitoryApi() {
 				data,
 			});
 		},
+		dianming: (data: object) => {
+			return request({
+				url: '/api/dormitory/add/dianming',
+				method: 'post',
+				data,
+			});
+		},
 		addStu: (data: object) => {
 			return request({
 				url: '/api/dormitory/add/stu',

@@ -277,7 +277,7 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 	if(state.mgType) {
 		if (!formEl) return;
 		formEl.validate((valid, fields) => {
-			if (valid) {
+			if (valid) {	
 				if(state.dialog.data.sidCount - Number(state.ruleForm.number) - state.ruleForm.leaves.length - state.ruleForm.absence.length > 0) {
 					ElMessage.error(`还有${state.dialog.data.sidCount - Number(state.ruleForm.number) - state.ruleForm.leaves.length - state.ruleForm.absence.length}人未录入！！`);
 					state.dialog.loading = false;
@@ -288,20 +288,15 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 					state.dialog.loading = false;
 					return;
 				}
-				console.log(state.ruleForm)
-				state.dialog.loading = false;
-				// if (state.dialog.type === 'add') { 
-				// 	
-				// } else {
-				// 	useDormitoryApi().mod(state.ruleForm).then((res) => {
-				// 		ElMessage.success(res.message);
-				// 		state.dialog.loading = false;
-				// 		closeDialog();
-				// 		emit('refresh');
-				// 	}).catch(() => {
-				// 		state.dialog.loading = false;
-				// 	})
-				// }
+				state.ruleForm.did = state.dialog.data.id
+				useDormitoryApi().dianming(state.ruleForm).then((res) => {
+					ElMessage.success(res.message);
+					state.dialog.loading = false;
+					closeDialog();
+					emit('refresh');
+				}).catch(() => {
+					state.dialog.loading = false;
+				})
 			} else {
 				state.dialog.loading = false;
 			}
