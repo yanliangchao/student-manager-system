@@ -9,7 +9,7 @@
 					</el-icon>
 					查询
 				</el-button>
-				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('add')">
+				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('add')"  v-if="!userInfos.roles.includes('common')">
 					<el-icon>
 						<ele-FolderAdd />
 					</el-icon>
@@ -49,13 +49,13 @@
 				
 				<el-table-column label="操作" width="130">
 					<template #default="scope">
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary"
+						<el-button  size="small" text type="primary"
 							>打印</el-button
 						>
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
+						<el-button  v-if="!userInfos.roles.includes('common')" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
 							>修改</el-button
 						>
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
+						<el-button v-if="!userInfos.roles.includes('common')" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -84,6 +84,8 @@
 import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { useClassApi } from '/@/api/class/index';
+import { useUserInfo } from '/@/stores/userInfo';
+import { storeToRefs } from 'pinia';
 
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/class/dialog.vue'));
@@ -95,6 +97,11 @@ const TecDialog = defineAsyncComponent(() => import('/@/views/class/tecDetails.v
 const userDialogRef = ref();
 const stuDialogRef = ref();
 const tecDialogRef = ref();
+
+// 权限
+// 定义变量内容
+const stores = useUserInfo();
+const { userInfos } = storeToRefs(stores);
 
 const state = reactive<ClassState>({
 	tableData: {

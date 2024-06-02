@@ -2,7 +2,31 @@
 	<div class="system-user-dialog-container">
 		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" :close-on-click-modal='false' width="769px">
 			<el-form ref="classDialogFormRef" :rules="rules" :model="state.ruleForm" size="default" label-width="90px">
-				<el-row :gutter="35">
+				<el-row :gutter="35" v-if="state.dialog.all">
+					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+						<el-upload
+							class="upload-demo"
+							:limit="1"
+							accept=".xlsx, .xls"
+							drag
+							action="http://localhost:3021/api/auth/files"
+							multiple
+							:auto-upload="true"
+      						:before-upload="beforeUpload"
+						>
+							<el-icon class="el-icon--upload"><upload-filled /></el-icon>
+							<div class="el-upload__text">
+							Drop file here or <em>click to upload</em>
+							</div>
+							<!-- <template #tip>
+							<div class="el-upload__tip">
+								jpg/png files with a size less than 500kb
+							</div>
+							</template> -->
+						</el-upload>
+					</el-col>
+				</el-row>
+				<el-row :gutter="35" v-else>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="姓名" prop="name">
 							<el-input v-model="state.ruleForm.name" placeholder="请输入姓名" clearable></el-input>
@@ -77,6 +101,8 @@ import { reactive, ref, nextTick } from 'vue';
 import { useClassApi } from '/@/api/class';
 import { useStudentApi } from '/@/api/student';
 import { ElMessage, FormRules, FormInstance } from 'element-plus';
+import { UploadFilled } from '@element-plus/icons-vue'
+import XLSX from "xlsx";
 
 // 定义子组件向父组件传值/事件
 const emit = defineEmits(['refresh']);
@@ -106,11 +132,13 @@ const state = reactive({
 		// status: true, // 用户状态
 		// describe: '', // 用户描述
 	},
+	allStudent: {},
 	classs: [] as SelectOptionType[],
 	//dormitorys: [] as SelectOptionType[],
 	dialog: {
 		loading: false,
 		isShowDialog: false,
+		all: false,
 		type: '',
 		title: '',
 		submitTxt: '',
@@ -134,7 +162,12 @@ const openDialog = (type: string, row: StudentType) => {
 	//classDialogFormRef.value.resetFields();
 	state.dialog.type = type;
 	state.dialog.isShowDialog = true;
-	if (type === 'edit') {
+	state.dialog.all = false;
+	if (type === 'all') {
+		state.dialog.all = true;
+		state.dialog.title = '导入学生';
+		state.dialog.submitTxt = '提 交';
+	} else if (type === 'edit') {
 		nextTick(() => {
 			state.ruleForm = JSON.parse(JSON.stringify(row));
 		});
@@ -166,13 +199,59 @@ const onCancel = (formEl: FormInstance | undefined) => {
   	formEl.resetFields()
 	closeDialog();
 };
+
+//上传文件之前的钩子
+const beforeUpload = (file: any) => {
+	console.log(file)
+	//解析excel
+	analysisExcel(file).then((tableJson: any) => {
+		if (tableJson && tableJson.length > 0) {
+			//成功解析出数据
+			//只取第一个sheet的数据
+			let dataExcel = tableJson[0];
+			console.log("数据", dataExcel);
+			console.log(JSON.stringify(dataExcel.sheet));
+			state.allStudent = JSON.stringify(dataExcel.sheet)
+		}
+	});
+}
+    //解析excel
+function analysisExcel(file: any) {
+	return new Promise(function (resolve, reject) {
+		const reader = new FileReader();
+		reader.onload = function (e: any) {
+			const data = e.target.result;
+			let datajson = XLSX.read(data, {
+				type: "binary",
+			});
+			const result = [] as any;
+			datajson.SheetNames.forEach((sheetName) => {
+			result.push({
+				sheetName: sheetName,
+				sheet: XLSX.utils.sheet_to_json(datajson.Sheets[sheetName]),
+			});
+			});
+			resolve(result);
+		};
+		reader.readAsBinaryString(file);
+	});
+}
 // 提交
 const onSubmit = (formEl: FormInstance | undefined) => {
 	state.dialog.loading = true;
 	if (!formEl) return
 	formEl.validate((valid, fields) => {
 		if (valid) {
-			if (state.dialog.type === 'add') { 
+			if (state.dialog.type === 'all') { 
+				useStudentApi().addAll(state.allStudent).then((res) => {
+					ElMessage.success(res.message);
+					state.dialog.loading = false;
+					closeDialog();
+					emit('refresh');
+				}).catch(() => {
+					state.dialog.loading = false;
+				})
+			} else if (state.dialog.type === 'add') { 
 				useStudentApi().add(state.ruleForm).then((res) => {
 					ElMessage.success(res.message);
 					state.dialog.loading = false;

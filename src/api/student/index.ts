@@ -42,6 +42,13 @@ export function useStudentApi() {
 				data,
 			});
 		},
+		addAll: (data: object) => {
+			return request({
+				url: '/api/student/addAll',
+				method: 'post',
+				data,
+			});
+		},
         mod: (data: object) => {
 			return request({
 				url: '/api/student/mod',

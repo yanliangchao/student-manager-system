@@ -9,11 +9,17 @@
 					</el-icon>
 					查询
 				</el-button>
-				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('add')">
+				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('add')" v-if="!userInfos.roles.includes('common')">
 					<el-icon>
 						<ele-FolderAdd />
 					</el-icon>
 					新增学生
+				</el-button>
+				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('all')" v-if="!userInfos.roles.includes('common')">
+					<el-icon>
+						<ele-FolderAdd />
+					</el-icon>
+					导入学生
 				</el-button>
 			</div>
 			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
@@ -57,13 +63,13 @@
 				</el-table-column>
 				<el-table-column label="操作" width="150">
 					<template #default="scope">
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="success" @click="onOpenDetails(scope.row)"
+						<el-button size="small" text type="success" @click="onOpenDetails(scope.row)"
 							>违纪</el-button
 						>
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
+						<el-button v-if="!userInfos.roles.includes('common')" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
 							>修改</el-button
 						>
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="danger" @click="onRowDel(scope.row)">删除</el-button>
+						<el-button v-if="!userInfos.roles.includes('common')" size="small" text type="danger" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -90,10 +96,17 @@
 import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { useStudentApi } from '/@/api/student';
+import { useUserInfo } from '/@/stores/userInfo';
+import { storeToRefs } from 'pinia';
 
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/student/dialog.vue'));
 const DetailsDialog = defineAsyncComponent(() => import('/@/views/student/details.vue'));
+
+// 权限
+// 定义变量内容
+const stores = useUserInfo();
+const { userInfos } = storeToRefs(stores);
 
 // 定义变量内容
 const userDialogRef = ref();

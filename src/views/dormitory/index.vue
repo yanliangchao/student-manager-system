@@ -13,7 +13,7 @@
 						</el-button>
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="12" :lg="16" :xl="16" class="mb20">
-						<el-button size="default" type="success" @click="onOpenAddUser('add')">
+						<el-button size="default" type="success" @click="onOpenAddUser('add')" v-if="!userInfos.roles.includes('common')">
 							<el-icon>
 								<ele-FolderAdd />
 							</el-icon>
@@ -64,10 +64,10 @@
 						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary"
 							>打印</el-button
 						>
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
+						<el-button v-if="!userInfos.roles.includes('common')" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
 							>修改</el-button
 						>
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
+						<el-button v-if="!userInfos.roles.includes('common')" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -96,12 +96,18 @@
 import { defineAsyncComponent, reactive, onMounted, ref, onUnmounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { useDormitoryApi } from '/@/api/dormitory';
+import { useUserInfo } from '/@/stores/userInfo';
+import { storeToRefs } from 'pinia';
 
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/dormitory/dialog.vue'));
 const StuDialog = defineAsyncComponent(() => import('/@/views/dormitory/stuDetails.vue'));
 const MgDialog = defineAsyncComponent(() => import('/@/views/dormitory/mgDetails.vue'));
 
+// 权限
+// 定义变量内容
+const stores = useUserInfo();
+const { userInfos } = storeToRefs(stores);
 
 // 定义变量内容
 const userDialogRef = ref();

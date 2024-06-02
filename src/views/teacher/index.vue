@@ -9,7 +9,7 @@
 					</el-icon>
 					查询
 				</el-button>
-				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('add')">
+				<el-button size="default" type="success" class="ml10" @click="onOpenAddUser('add')"  v-if="!userInfos.roles.includes('common')" >
 					<el-icon>
 						<ele-FolderAdd />
 					</el-icon>
@@ -32,15 +32,15 @@
 						<el-tag v-for="(v, k) in scope.row.class" :key="k">{{ v.class_id }} / {{ v.subject }}</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column label="操作" width="150">
+				<el-table-column label="操作" width="150"  v-if="!userInfos.roles.includes('common')" >
 					<template #default="scope">
 						<!-- <el-button :disabled="scope.row.username === 'admin'" size="small" text type="success" @click="onOpenDetails(scope.row)"
 							>违纪</el-button
 						> -->
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
+						<el-button v-if="!userInfos.roles.includes('common')"  size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
 							>修改</el-button
 						>
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
+						<el-button v-if="!userInfos.roles.includes('common')"  size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -67,6 +67,8 @@
 import { defineAsyncComponent, reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { useTeacherApi } from '/@/api/teacher';
+import { useUserInfo } from '/@/stores/userInfo';
+import { storeToRefs } from 'pinia';
 
 // 引入组件
 const UserDialog = defineAsyncComponent(() => import('/@/views/teacher/dialog.vue'));
@@ -75,6 +77,12 @@ const DetailsDialog = defineAsyncComponent(() => import('/@/views/teacher/detail
 // 定义变量内容
 const userDialogRef = ref();
 const detailsDialogRef = ref();
+
+// 权限
+// 定义变量内容
+const stores = useUserInfo();
+const { userInfos } = storeToRefs(stores);
+
 const state = reactive<TeacherState>({
 	tableData: {
 		data: [],

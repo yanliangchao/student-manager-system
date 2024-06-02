@@ -38,7 +38,8 @@
 		"vue-demi": "^0.14.7",
 		"vue-grid-layout": "^3.0.0-beta1",
 		"vue-i18n": "^9.10.2",
-		"vue-router": "^4.3.0"
+		"vue-router": "^4.3.0",
+		"xlsx": "^0.16.8"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.28",
