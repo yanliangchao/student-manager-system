@@ -5,6 +5,7 @@
 				<el-row :gutter="35" v-if="state.dialog.all">
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-upload
+							ref="unloadRef"
 							class="upload-demo"
 							:limit="1"
 							accept=".xlsx, .xls"
@@ -100,7 +101,7 @@
 import { reactive, ref, nextTick } from 'vue';
 import { useClassApi } from '/@/api/class';
 import { useStudentApi } from '/@/api/student';
-import { ElMessage, FormRules, FormInstance } from 'element-plus';
+import { ElMessage, FormRules, FormInstance, UploadInstance } from 'element-plus';
 import { UploadFilled } from '@element-plus/icons-vue'
 import XLSX from "xlsx";
 
@@ -109,6 +110,7 @@ const emit = defineEmits(['refresh']);
 
 // 定义变量内容
 const classDialogFormRef = ref();
+const unloadRef = ref<UploadInstance>();
 const state = reactive({
 	ruleForm: {
 		name: '',
@@ -167,6 +169,9 @@ const openDialog = (type: string, row: StudentType) => {
 		state.dialog.all = true;
 		state.dialog.title = '导入学生';
 		state.dialog.submitTxt = '提 交';
+		nextTick(() => {
+			unloadRef.value!.clearFiles();
+		});
 	} else if (type === 'edit') {
 		nextTick(() => {
 			state.ruleForm = JSON.parse(JSON.stringify(row));
@@ -209,8 +214,8 @@ const beforeUpload = (file: any) => {
 			//成功解析出数据
 			//只取第一个sheet的数据
 			let dataExcel = tableJson[0];
-			console.log("数据", dataExcel);
-			console.log(JSON.stringify(dataExcel.sheet));
+			// console.log("数据", dataExcel);
+			// console.log(JSON.stringify(dataExcel.sheet));
 			state.allStudent = JSON.stringify(dataExcel.sheet)
 		}
 	});

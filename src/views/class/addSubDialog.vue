@@ -77,9 +77,6 @@ const state = reactive({
 });
 
 const rules = reactive<FormRules<ClassType>>({
-	tid: [
-		{ required: true, message: 'Please input class name', trigger: 'blur' },
-	],
 	sid: [
 		{ required: true, message: 'Please input school name', trigger: 'blur' },
 	],

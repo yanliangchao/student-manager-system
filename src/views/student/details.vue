@@ -15,7 +15,7 @@
                 type='primary'
                 placement="top"
                 >
-                {{ activity.describes }}
+                {{ activity.describes }} | -{{ activity.number }}
                 </el-timeline-item>
             </el-timeline>
 		</el-dialog>

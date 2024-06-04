@@ -41,9 +41,13 @@
 						</div>
 						<el-form-item>
 							<el-checkbox-group v-model="state.ruleForm.dids">
-								<div v-for="(v, k) in state.tableData.dormitoryData" :key="k">
-									<el-checkbox :value="v.id" :label="v.building + '-' + v.storey + '-' + v.name" />
-								</div>
+								<el-row :gutter="35">
+									<div v-for="(v, k) in state.tableData.dormitoryData" :key="k">
+										<el-col :xs="12" :sm="8" :md="8" :lg="8" :xl="8">
+											<el-checkbox :value="v.id" :label="v.building + '-' + v.storey + '-' + v.name" />
+										</el-col>
+									</div>
+								</el-row>
 							</el-checkbox-group>
 						</el-form-item>
 					</el-form>
