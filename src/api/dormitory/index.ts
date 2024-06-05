@@ -34,11 +34,25 @@ export function useDormitoryApi() {
 				data,
 			});
 		},
+		getStorey: (params?: object) => {
+			return request({
+				url: '/api/dormitory/storey',
+				method: 'get',
+				params,
+			});
+		},
 		pingfen: (data: object) => {
 			return request({
 				url: '/api/dormitory/add/pingfen',
 				method: 'post',
 				data,
+			});
+		},
+		pingfenPrint: (params?: object) => {
+			return request({
+				url: '/api/dormitory/list/print/pingfen',
+				method: 'get',
+				params,
 			});
 		},
 		dianming: (data: object) => {

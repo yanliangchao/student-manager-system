@@ -12,12 +12,20 @@
 							查询
 						</el-button>
 					</el-col>
-					<el-col :xs="24" :sm="24" :md="12" :lg="16" :xl="16" class="mb20">
+					<el-col :xs="12" :sm="24" :md="6" :lg="4" :xl="4" class="mb20">
 						<el-button size="default" type="success" @click="onOpenAddUser('add')" v-if="!userInfos.roles.includes('common')">
 							<el-icon>
 								<ele-FolderAdd />
 							</el-icon>
 							新增寝室
+						</el-button>
+					</el-col>
+					<el-col :xs="12" :sm="24" :md="6" :lg="4" :xl="4" class="mb20">
+						<el-button size="default" type="warning" @click="getStoreyPingfen()" v-if="!userInfos.roles.includes('common')">
+							<el-icon>
+								<ele-FolderAdd />
+							</el-icon>
+							楼层评分
 						</el-button>
 					</el-col>
 				</el-row>	
@@ -88,6 +96,7 @@
 		<UserDialog ref="userDialogRef" @refresh="getTableData()" />
 		<StuDialog ref="stuDialogRef"/>
 		<MgDialog ref="mgDialogRef"/>
+		<PingfenDialog ref="pingfenDialog"/>
 
 	</div>
 </template>
@@ -103,6 +112,7 @@ import { storeToRefs } from 'pinia';
 const UserDialog = defineAsyncComponent(() => import('/@/views/dormitory/dialog.vue'));
 const StuDialog = defineAsyncComponent(() => import('/@/views/dormitory/stuDetails.vue'));
 const MgDialog = defineAsyncComponent(() => import('/@/views/dormitory/mgDetails.vue'));
+const PingfenDialog = defineAsyncComponent(() => import('/@/views/dormitory/pingfenDetails.vue'));
 
 // 权限
 // 定义变量内容
@@ -113,6 +123,8 @@ const { userInfos } = storeToRefs(stores);
 const userDialogRef = ref();
 const stuDialogRef = ref();
 const mgDialogRef = ref();
+const pingfenDialog = ref();
+
 const screenWidth  = ref(true);
 const state = reactive<DormitoryState>({
 	tableData: {
@@ -179,6 +191,11 @@ const onHandleCurrentChange = (val: number) => {
 // 获取学生并弹窗显示
 const getStudentByDid = (row: ClassType) => {
 	stuDialogRef.value.openDialog(row);
+}
+
+// 获取评分弹窗显示
+const getStoreyPingfen = () => {
+	pingfenDialog.value.openDialog();
 }
 
 // 获取管理弹窗显示
