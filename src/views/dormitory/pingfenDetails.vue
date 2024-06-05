@@ -19,6 +19,7 @@
 							placeholder="选择打印时间"
 							size="small"
 							value-format="YYYY-MM-DD"
+							format="YYYY-MM-DD"
 							:disabled-date="disabledDate"
 						/>
 					</template>
