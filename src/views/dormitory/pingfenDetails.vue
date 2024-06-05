@@ -48,7 +48,7 @@
 		</el-dialog>
 		<div ref="printRef" v-show="false">
 			<div class="header-title mb20"><h2>{{ state.pingfenPrint.school }} 润德教育学生公寓常规检查记录表</h2></div>
-			<div class="signature mb20"><span>{{ state.pingfenPrint.times }}</span><span>A楼3层</span></div>
+			<div class="signature mb20"><span>{{ state.pingfenPrint.times }}</span><span>{{ state.pingfenPrint.building }}-{{ state.pingfenPrint.storey }}层</span></div>
 			<table>
 				<tbody>
 					<tr>
@@ -115,6 +115,8 @@ const state = reactive({
 		}],
 		school: 'school',
 		times: '',
+		building: '',
+		storey: '',
 	},
     dialog: {
 		isShowDialog: false,
@@ -168,6 +170,8 @@ const disabledDate = (time: Date) => {
 const print = async (row: any) => {
 	console.log(row)
 	state.pingfenPrint.times = row.times
+	state.pingfenPrint.building = row.building
+	state.pingfenPrint.storey = row.storey
 	await useDormitoryApi().pingfenPrint(row).then((res) => {
 		ElMessage.success(res.message);
 		state.pingfenPrint.print = res.data
