@@ -1,6 +1,6 @@
 <template>
 	<div class="system-user-dialog-container">
-		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="80%">
+		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog"  :close-on-click-modal='false' width="80%">
 			<template #header="{ titleId, titleClass }">
                 <div class="my-header">
                     <h4 :id="titleId" :class="titleClass">{{ state.dialog.title }}</h4>

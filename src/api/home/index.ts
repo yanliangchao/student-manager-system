@@ -39,5 +39,11 @@ export function useHomeApi() {
 				method: 'get',
 			});
 		},
+		getLeave: () => {
+			return request({
+				url: '/api/home/school/leave',
+				method: 'get',
+			});
+		}
 	};
 }

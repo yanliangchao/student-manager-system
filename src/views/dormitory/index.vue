@@ -69,7 +69,7 @@
 						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="getManager(scope.row)"
 							>管理</el-button
 						>
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary"
+						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="getPrint(scope.row)"
 							>打印</el-button
 						>
 						<el-button v-if="!userInfos.roles.includes('common')" size="small" text type="primary" @click="onOpenEditUser('edit', scope.row)"
@@ -97,6 +97,7 @@
 		<StuDialog ref="stuDialogRef"/>
 		<MgDialog ref="mgDialogRef"/>
 		<PingfenDialog ref="pingfenDialog"/>
+		<PersonalDialog ref="personalDialog" />
 
 	</div>
 </template>
@@ -113,6 +114,7 @@ const UserDialog = defineAsyncComponent(() => import('/@/views/dormitory/dialog.
 const StuDialog = defineAsyncComponent(() => import('/@/views/dormitory/stuDetails.vue'));
 const MgDialog = defineAsyncComponent(() => import('/@/views/dormitory/mgDetails.vue'));
 const PingfenDialog = defineAsyncComponent(() => import('/@/views/dormitory/pingfenDetails.vue'));
+const PersonalDialog = defineAsyncComponent(() => import('/@/views/dormitory/personalDetails.vue'));
 
 // 权限
 // 定义变量内容
@@ -124,6 +126,7 @@ const userDialogRef = ref();
 const stuDialogRef = ref();
 const mgDialogRef = ref();
 const pingfenDialog = ref();
+const personalDialog = ref();
 
 const screenWidth  = ref(true);
 const state = reactive<DormitoryState>({
@@ -189,8 +192,13 @@ const onHandleCurrentChange = (val: number) => {
 	getTableData();
 };
 // 获取学生并弹窗显示
-const getStudentByDid = (row: ClassType) => {
+const getStudentByDid = (row: DormitoryType) => {
 	stuDialogRef.value.openDialog(row);
+}
+
+// 打印弹窗
+const getPrint = (row: DormitoryType) => {
+	personalDialog.value.openDialog(row);
 }
 
 // 获取评分弹窗显示

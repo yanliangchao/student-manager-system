@@ -55,6 +55,13 @@ export function useDormitoryApi() {
 				params,
 			});
 		},
+		personalPrint: (id: number, params?: object) => {
+			return request({
+				url: '/api/dormitory/print/pingfen/' + id,
+				method: 'get',
+				params,
+			});
+		},
 		dianming: (data: object) => {
 			return request({
 				url: '/api/dormitory/add/dianming',

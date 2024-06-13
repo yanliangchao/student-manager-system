@@ -1,6 +1,6 @@
 <template>
 	<div class="system-user-dialog-container">
-		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" width="769px">
+		<el-dialog :title="state.dialog.title" v-model="state.dialog.isShowDialog" :close-on-click-modal='false' width="769px">
 			<el-form ref="dormitoryDialogFormRef" :rules="rules" :model="state.ruleForm" size="default" label-width="90px">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -125,8 +125,8 @@ const onCancel = (formEl: FormInstance | undefined) => {
 };
 // 提交
 const onSubmit = (formEl: FormInstance | undefined) => {
-	state.dialog.loading = true;
 	if (!formEl) return
+	state.dialog.loading = true;
 	formEl.validate((valid, fields) => {
 		if (valid) {
 			if (state.dialog.type === 'add') { 

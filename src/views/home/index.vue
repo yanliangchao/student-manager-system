@@ -28,17 +28,23 @@
 		<el-row :gutter="15" class="home-card-three mb15">
 			<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" class="home-media">
 				<div class="home-card-item">
-					<div class="title">学校违纪统计</div>
-					<el-table ref="schoolTableRef" :data="state.global.schoolCount" v-loading="state.global.loading" highlight-current-row  @current-change="handleCurrentChange" style="width: 100%">
+					<div class="title">今日请假学生</div>
+					<el-table ref="schoolTableRef" :data="state.global.leveaStu" v-loading="state.global.loading" highlight-current-row size="small" style="width: 100%">
 						<el-table-column type="index" label="序号" width="80" />
-						<el-table-column prop="school_name" label="学校" show-overflow-tooltip></el-table-column>
-						<el-table-column prop="count" label="违纪数量" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="class_name" label="班级" show-overflow-tooltip></el-table-column>
+						<el-table-column label="宿舍" show-overflow-tooltip>
+							<template #default="scope">
+								{{ scope.row.building }}-{{ scope.row.storey }}-{{ scope.row.tdm_name }}
+							</template>
+						</el-table-column>
+						<el-table-column prop="name" label="学生" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="username" label="审批老师" show-overflow-tooltip></el-table-column>
 					</el-table>
 				</div>
 			</el-col>
 			<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" class="home-media">
 				<div class="home-card-item">
-					<div class="title">教师违纪统计</div>
+					<div class="title">老师评分统计</div>
 					<el-table :data="state.global.teacherCount" v-loading="state.global.loading" highlight-current-row style="width: 100%">
 						<el-table-column type="index" label="序号" width="80" />
 						<el-table-column prop="name" label="学校" show-overflow-tooltip></el-table-column>
@@ -81,6 +87,7 @@ const { themeConfig } = storeToRefs(storesThemeConfig);
 const { isTagsViewCurrenFull } = storeToRefs(storesTagsViewRoutes);
 const state = reactive({
 	global: {
+		leveaStu: [],
 		schoolCount: [],
 		teacherCount: [],
 		homeCharClass: null,
@@ -124,10 +131,10 @@ const handleCurrentChange = (val: any) => {
 	getClassCount(val.id);
 }
 
-const getSchoolCount = () => {
-	useHomeApi().getSchoolCount().then((res) => {
-		state.global.schoolCount = res.data
-		schoolTableRef.value!.setCurrentRow(state.global.schoolCount[0])
+const getLeaveStu = () => {
+	useHomeApi().getLeave().then((res) => {
+		state.global.leveaStu = res.data
+		//schoolTableRef.value!.setCurrentRow(state.global.schoolCount[0])
 	}) 
 }
 
@@ -280,7 +287,7 @@ const initEchartsResize = () => {
 onMounted(() => {
 	initEchartsResize();
 	getHomeOne();
-	getSchoolCount();	
+	getLeaveStu();	
 });
 // 由于页面缓存原因，keep-alive
 onActivated(() => {

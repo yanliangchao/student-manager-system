@@ -1,6 +1,6 @@
 <template>
 	<div class="system-user-dialog-container">
-		<el-dialog v-model="state.dialog.isShowDialog" width="769px" fullscreen>
+		<el-dialog v-model="state.dialog.isShowDialog" :close-on-click-modal='false' width="769px" fullscreen>
 			<template #header="{ titleId, titleClass }">
 				<el-radio-group v-model="state.mgType" size="default">
 					<el-radio-button :value="0">评分</el-radio-button>
@@ -93,12 +93,12 @@
 						</el-col>
 						<template v-for="(v, k) in state.personalPingfen.publics">
 							<el-col :xs="8" :sm="12" :md="12" :lg="12" :xl="12" class="mb10">
-								<el-form-item :key="k" label="扣分" :prop="'publics.' + k + '.number'" size="small" :rules="{ required: true, message: 'Please input', trigger: 'blur' }">
+								<el-form-item :key="k" label="扣分" :prop="'publics.' + k + '.number'" size="small">
 									<el-input type="number" v-model="v.number" placeholder="请输入分数" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" class="mb10">
-								<el-form-item :key="k" label="原因" :prop="'publics.' + k + '.reason'" size="small" :rules="{ required: true, message: 'Please input', trigger: 'blur' }">
+								<el-form-item :key="k" label="原因" :prop="'publics.' + k + '.reason'" size="small">
 									<!-- <el-input v-model="v.reason" placeholder="请输入扣分原因" clearable></el-input> -->
 									<el-select v-model="v.reason" placeholder="请输入扣分原因" filterable clearable class="w100">
 										<el-option key="0" label="床铺" value="床铺" />
@@ -274,10 +274,10 @@ const deletePersonalPingfen = (item: Public) => {
 // 提交
 const onSubmit = (formEl: FormInstance | undefined) => {
 	state.dialog.loading = true;
-	if(state.mgType) {
-		if (!formEl) return;
-		formEl.validate((valid, fields) => {
-			if (valid) {	
+	if (!formEl) return;
+	formEl.validate((valid, fields) => {
+		if (valid) {
+			if(state.mgType) {	
 				if(state.dialog.data.sidCount - Number(state.ruleForm.number) - state.ruleForm.leaves.length - state.ruleForm.absence.length > 0) {
 					ElMessage.error(`还有${state.dialog.data.sidCount - Number(state.ruleForm.number) - state.ruleForm.leaves.length - state.ruleForm.absence.length}人未录入！！`);
 					state.dialog.loading = false;
@@ -297,40 +297,38 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 				}).catch(() => {
 					state.dialog.loading = false;
 				})
-			} else {
-				state.dialog.loading = false;
+			} else{
+				let flag = false;
+				let oldPersonalPingfen = Object.assign({}, state.personalPingfen);
+				state.pingfen.personals.forEach(personal => {
+					if(personal.sid === oldPersonalPingfen.sid) {
+						personal.publics = oldPersonalPingfen.publics
+						flag = true;
+					}
+					if(personal.sid === state.sid) {
+						state.personalPingfen.publics = personal.publics
+					}
+				})
+				if(!flag && oldPersonalPingfen.sid != null) {
+					state.pingfen.personals.push({
+						sid: oldPersonalPingfen.sid,
+						publics: oldPersonalPingfen.publics
+					})
+				};
+				state.pingfen.did = state.dialog.data.id
+				useDormitoryApi().pingfen(state.pingfen).then((res) => {
+					ElMessage.success(res.message);
+					state.dialog.loading = false;
+					closeDialog();
+					emit('refresh');
+				}).catch(() => {
+					state.dialog.loading = false;
+				})	
 			}
-		})
-	} else{
-		let flag = false;
-		let oldPersonalPingfen = Object.assign({}, state.personalPingfen);
-		state.pingfen.personals.forEach(personal => {
-			if(personal.sid === oldPersonalPingfen.sid) {
-				personal.publics = oldPersonalPingfen.publics
-				flag = true;
-			}
-			if(personal.sid === state.sid) {
-				state.personalPingfen.publics = personal.publics
-			}
-		})
-		if(!flag) {
-			state.pingfen.personals.push({
-				sid: oldPersonalPingfen.sid,
-				publics: oldPersonalPingfen.publics
-			})
-		};
-		state.pingfen.did = state.dialog.data.id
-		useDormitoryApi().pingfen(state.pingfen).then((res) => {
-			ElMessage.success(res.message);
+		} else {
 			state.dialog.loading = false;
-			closeDialog();
-			emit('refresh');
-		}).catch(() => {
-			state.dialog.loading = false;
-		})	
-	}
-	
-	
+		}
+	})
 };
 
 // 初始化表格数据
@@ -338,9 +336,9 @@ const getTableData = () => {
 	//const data = [];
 	if(state.students.length > 0) return;
 	useDormitoryApi().getStuByid(state.dialog.data.id).then((res) => {
-		res.data.forEach((t: { id: number; name: string; }) => {
+		res.data.forEach((t: { id: number; name: string; number: string }) => {
 			state.students.push({
-				label: t.name,
+				label: t.number + " - " + t.name,
 				value: t.id,
 			})
 		});
