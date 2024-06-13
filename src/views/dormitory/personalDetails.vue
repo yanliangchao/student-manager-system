@@ -38,7 +38,10 @@
                     </tr>
                     <tr>
                         <td>公共卫生</td>
-                        <td><p  v-for="(item, index) in state.print.public" :key="index">{{ item }}</p></td>
+                        <td>
+                            <p v-if="state.print.public.length === 0">优秀！</p>
+                            <p v-else v-for="(item, index) in state.print.public" :key="index">{{ item }}</p>
+                        </td>
                     </tr>
                     <tr v-for="(v, k) in state.print.personal">
                         <td>{{ v.name }}</td>
