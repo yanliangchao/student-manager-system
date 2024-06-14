@@ -44,6 +44,12 @@ export function useHomeApi() {
 				url: '/api/home/school/leave',
 				method: 'get',
 			});
-		}
+		},
+		getTeacherPinfen: () => {
+			return request({
+				url: '/api/home/teacher/pinfen',
+				method: 'get',
+			});
+		},
 	};
 }

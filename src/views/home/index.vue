@@ -45,10 +45,18 @@
 			<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" class="home-media">
 				<div class="home-card-item">
 					<div class="title">老师评分统计</div>
-					<el-table :data="state.global.teacherCount" v-loading="state.global.loading" highlight-current-row style="width: 100%">
+					<el-table :data="state.global.teaPinfen" v-loading="state.global.loading" highlight-current-row size="small" style="width: 100%">
 						<el-table-column type="index" label="序号" width="80" />
-						<el-table-column prop="name" label="学校" show-overflow-tooltip></el-table-column>
-						<el-table-column prop="count" label="违纪数量" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="username" label="生活老师" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="tdmCount" label="宿舍数量" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="tsuCount" label="学生数量" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="avg" label="宿舍平均评分" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="totalTime" label="评分总用时" show-overflow-tooltip></el-table-column>
+						<el-table-column label="评分平均用时" show-overflow-tooltip>
+							<template #default="scope">
+								{{ scope.row.totalTime.includes('未评分') ? '请及时评分!' :  (scope.row.totalTime/scope.row.tdmCount).toFixed(2) }} 
+							</template>
+						</el-table-column>
 					</el-table>
 				</div>
 			</el-col>
@@ -88,6 +96,7 @@ const { isTagsViewCurrenFull } = storeToRefs(storesTagsViewRoutes);
 const state = reactive({
 	global: {
 		leveaStu: [],
+		teaPinfen: [],
 		schoolCount: [],
 		teacherCount: [],
 		homeCharClass: null,
@@ -126,7 +135,7 @@ const getHomeOne = () => {
 }
 // 选择用户行
 const handleCurrentChange = (val: any) => {
-	getTeacherCount(val.id);
+	//getTeacherCount(val.id);
 	getDormitoryCount(val.id);
 	getClassCount(val.id);
 }
@@ -138,9 +147,9 @@ const getLeaveStu = () => {
 	}) 
 }
 
-const getTeacherCount = (id: number) => {
-	useHomeApi().getTeacherCount(id).then((res) => {
-		state.global.teacherCount = res.data
+const getTeacherCount = () => {
+	useHomeApi().getTeacherPinfen().then((res) => {
+		state.global.teaPinfen = res.data
 	}) 
 }
 
@@ -287,7 +296,8 @@ const initEchartsResize = () => {
 onMounted(() => {
 	initEchartsResize();
 	getHomeOne();
-	getLeaveStu();	
+	getLeaveStu();
+	getTeacherCount();	
 });
 // 由于页面缓存原因，keep-alive
 onActivated(() => {
