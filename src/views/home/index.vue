@@ -51,8 +51,8 @@
 						<el-table-column prop="tdmCount" label="宿舍数量" show-overflow-tooltip></el-table-column>
 						<el-table-column prop="tsuCount" label="学生数量" show-overflow-tooltip></el-table-column>
 						<el-table-column prop="avg" label="宿舍平均评分" show-overflow-tooltip></el-table-column>
-						<el-table-column prop="totalTime" label="评分总用时" show-overflow-tooltip></el-table-column>
-						<el-table-column label="评分平均用时" show-overflow-tooltip>
+						<el-table-column prop="totalTime" label="评分总用时(h)" show-overflow-tooltip></el-table-column>
+						<el-table-column label="评分平均用时(h)" show-overflow-tooltip>
 							<template #default="scope">
 								{{ scope.row.totalTime.includes('未评分') ? '请及时评分!' :  (scope.row.totalTime/scope.row.tdmCount).toFixed(2) }} 
 							</template>
