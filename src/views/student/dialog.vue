@@ -10,7 +10,7 @@
 							:limit="1"
 							accept=".xlsx, .xls"
 							drag
-							action="http://localhost:3021/api/auth/files"
+							action="https://student.lcyan.cloud/api/auth/files"
 							multiple
 							:auto-upload="true"
       						:before-upload="beforeUpload"
