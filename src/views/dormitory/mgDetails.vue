@@ -334,7 +334,7 @@ const onSubmit = (formEl: FormInstance | undefined) => {
 // 初始化表格数据
 const getTableData = () => {
 	//const data = [];
-	if(state.students.length > 0) return;
+	state.students = [];
 	useDormitoryApi().getStuByid(state.dialog.data.id).then((res) => {
 		res.data.forEach((t: { id: number; name: string; number: string }) => {
 			state.students.push({
