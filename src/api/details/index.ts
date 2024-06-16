@@ -35,6 +35,13 @@ export function useDetailsApi() {
 				data,
 			});
 		},
+		addLeave: (data: object) => {
+			return request({
+				url: '/api/details/add/leave',
+				method: 'post',
+				data,
+			});
+		},
         mod: (data: object) => {
 			return request({
 				url: '/api/details/mod',

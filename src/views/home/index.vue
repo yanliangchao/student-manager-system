@@ -63,13 +63,47 @@
 		</el-row>
 		<el-row :gutter="15" class="home-card-three">
 			<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" class="home-media">
-				<div class="home-card-item">
+				<!-- <div class="home-card-item">
 					<div style="height: 100%" ref="classBarRef"></div>
+				</div> -->
+				<div class="home-card-item">
+					<div class="title">今日学生违纪</div>
+					<el-table :data="state.global.disciplineStu" v-loading="state.global.loading" highlight-current-row size="small" style="width: 100%">
+						<el-table-column type="index" label="序号" width="80" />
+						<el-table-column prop="name" label="姓名" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="describes" label="详情" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="number" label="扣分" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="times" label="时间" show-overflow-tooltip></el-table-column>
+					</el-table>
 				</div>
 			</el-col>
 			<el-col :xs="24" :sm="24" :md="24" :lg="12" :xl="12" class="home-media">
-				<div class="home-card-item">
+				<!-- <div class="home-card-item">
 					<div style="height: 100%" ref="dormitoryBarRef"></div>
+				</div> -->
+				<div class="home-card-item">
+					<div class="title">老师点名统计</div>
+					<el-table :data="state.global.teaDianming" v-loading="state.global.loading" highlight-current-row size="small" style="width: 100%">
+						<el-table-column type="index" label="序号" width="80" />
+						<el-table-column prop="username" label="生活老师" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="tdmCount" label="宿舍数量" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="tsuCount" label="应到学生" show-overflow-tooltip></el-table-column>
+						<el-table-column label="实到学生" show-overflow-tooltip>
+							<template #default="scope">
+								{{ scope.row.tsuCount - scope.row.lack - scope.row.leave }} 
+							</template>
+						</el-table-column>
+						<el-table-column label="请假学生" show-overflow-tooltip>
+							<template #default="scope">
+								{{ Number(scope.row.lack) === 0 && Number(scope.row.leave) === 0 ? '未点名!' : scope.row.leave }} 
+							</template>
+						</el-table-column>
+						<el-table-column label="缺寝学生" show-overflow-tooltip>
+							<template #default="scope">
+								{{ Number(scope.row.lack) === 0 && Number(scope.row.leave) === 0 ? '请及时点名!' : scope.row.lack }} 
+							</template>
+						</el-table-column>
+					</el-table>
 				</div>
 			</el-col>
 		</el-row>
@@ -97,6 +131,8 @@ const state = reactive({
 	global: {
 		leveaStu: [],
 		teaPinfen: [],
+		disciplineStu: [],
+		teaDianming: [],
 		schoolCount: [],
 		teacherCount: [],
 		homeCharClass: null,
@@ -150,6 +186,17 @@ const getLeaveStu = () => {
 const getTeacherCount = () => {
 	useHomeApi().getTeacherPinfen().then((res) => {
 		state.global.teaPinfen = res.data
+	}) 
+}
+
+const getDisciplineStu = () => {
+	useHomeApi().getDiscipline().then((res) => {
+		state.global.disciplineStu = res.data
+	}) 
+}
+const getDianmingCount = () => {
+	useHomeApi().getTeacherDianming().then((res) => {
+		state.global.teaDianming = res.data
 	}) 
 }
 
@@ -298,6 +345,8 @@ onMounted(() => {
 	getHomeOne();
 	getLeaveStu();
 	getTeacherCount();	
+	getDisciplineStu();
+	getDianmingCount();
 });
 // 由于页面缓存原因，keep-alive
 onActivated(() => {

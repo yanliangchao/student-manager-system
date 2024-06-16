@@ -17,7 +17,7 @@
 					<el-icon>
 						<ele-FolderAdd />
 					</el-icon>
-					新增违纪
+					新增请假
 				</el-button>
 			</div>
 			<el-table v-if="!state.tableData.selectd" :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%">
@@ -45,9 +45,9 @@
 				<el-table-column prop="username" label="操作人" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="100">
 					<template #default="scope">
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', state.tableData.selectd, scope.row)"
+						<!-- <el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', state.tableData.selectd, scope.row)"
 							>修改</el-button
-						>
+						> -->
 						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
@@ -64,9 +64,9 @@
 				<el-table-column prop="describes" label="违纪" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="100">
 					<template #default="scope">
-						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', state.tableData.selectd, scope.row)"
+						<!-- <el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onOpenEditUser('edit', state.tableData.selectd, scope.row)"
 							>修改</el-button
-						>
+						> -->
 						<el-button :disabled="scope.row.username === 'admin'" size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
@@ -95,7 +95,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { useDetailsApi } from '/@/api/details';
 
 // 引入组件
-const UserDialog = defineAsyncComponent(() => import('/@/views/details/dialog.vue'));
+const UserDialog = defineAsyncComponent(() => import('/@/views/leave/dialog.vue'));
 
 // 定义变量内容
 const userDialogRef = ref();

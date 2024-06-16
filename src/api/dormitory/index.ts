@@ -27,6 +27,12 @@ export function useDormitoryApi() {
 				method: 'get',
 			});
 		},
+		getLeaveStuByid: (id: number) => {
+			return request({
+				url: '/api/dormitory/list/leave/stu/' +id,
+				method: 'get',
+			});
+		},
 		add: (data: object) => {
 			return request({
 				url: '/api/dormitory/add',

@@ -51,5 +51,17 @@ export function useHomeApi() {
 				method: 'get',
 			});
 		},
+		getDiscipline: () => {
+			return request({
+				url: '/api/home/school/discipline',
+				method: 'get',
+			});
+		},
+		getTeacherDianming: () => {
+			return request({
+				url: '/api/home/teacher/dianming',
+				method: 'get',
+			});
+		},
 	};
 }
