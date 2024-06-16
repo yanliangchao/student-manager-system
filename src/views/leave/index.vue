@@ -40,8 +40,8 @@
 						{{ formatDate(scope.row.times) }}
 					</template>
 				</el-table-column>
-				<el-table-column prop="describes" label="违纪" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="scope" label="扣分" show-overflow-tooltip></el-table-column>
+				<!-- <el-table-column prop="describes" label="违纪" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="scope" label="扣分" show-overflow-tooltip></el-table-column> -->
 				<el-table-column prop="username" label="操作人" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" width="100">
 					<template #default="scope">

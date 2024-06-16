@@ -142,7 +142,7 @@ const state = reactive({
 	ruleForm: {
 		did: null,
 		number: null as unknown as number,
-		leaves: [],
+		leaves: [] as number[],
 		absence: [],
 		times: null,
 		//name: '',
@@ -343,6 +343,10 @@ const getTableData = () => {
 			})
 		});
 	});
+	state.ruleForm.leaves = [];
+	useDormitoryApi().getLeaveStuByid(state.dialog.data.id).then((res) => {
+		res.data.forEach((t: { sid: number; }) => state.ruleForm.leaves.push(t.sid))
+	})
 };
 
 // 暴露变量

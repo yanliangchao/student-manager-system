@@ -12,7 +12,7 @@
 							查询
 						</el-button>
 					</el-col>
-					<el-col :xs="12" :sm="24" :md="6" :lg="4" :xl="4" class="mb20">
+					<!-- <el-col :xs="12" :sm="24" :md="6" :lg="4" :xl="4" class="mb20">
 						<el-button size="default" type="success" @click="onOpenAddUser('add')" v-if="!userInfos.roles.includes('common')">
 							<el-icon>
 								<ele-FolderAdd />
@@ -27,7 +27,7 @@
 							</el-icon>
 							楼层评分
 						</el-button>
-					</el-col>
+					</el-col> -->
 				</el-row>	
 			</div>
 			<el-table :data="state.tableData.data" v-loading="state.tableData.loading" style="width: 100%" size="small">
