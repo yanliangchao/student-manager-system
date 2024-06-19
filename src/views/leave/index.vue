@@ -35,9 +35,14 @@
 						{{ scope.row.building }} - {{  scope.row.storey }} - {{  scope.row.dormitory_name }} | {{  scope.row.dormitory_gender == 1 ? '女寝' : '男寝'  }} | {{  scope.row.number }}
 					</template>
 				</el-table-column>
-				<el-table-column prop="times" label="时间" show-overflow-tooltip>
+				<el-table-column prop="times" label="开始时间" show-overflow-tooltip>
 					<template #default="scope">
-						{{ formatDate(scope.row.times) }}
+						{{ formatDate(scope.row.start_time) }}
+					</template>
+				</el-table-column>
+				<el-table-column prop="times" label="结束时间" show-overflow-tooltip>
+					<template #default="scope">
+						{{ formatDate(scope.row.end_time) }}
 					</template>
 				</el-table-column>
 				<!-- <el-table-column prop="describes" label="违纪" show-overflow-tooltip></el-table-column>
@@ -117,7 +122,7 @@ const state = reactive({
 const getTableData = () => {
 	state.tableData.loading = true;
 	state.tableData.data = [];
-	useDetailsApi().getPage(state.tableData.selectd, state.tableData.param).then((res) => {
+	useDetailsApi().getLeave(state.tableData.param).then((res) => {
 		ElMessage.success(res.message);
 		state.tableData.total = Number(res.count)
 		state.tableData.data = res.data

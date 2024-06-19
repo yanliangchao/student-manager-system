@@ -35,6 +35,13 @@ export function useDetailsApi() {
 				data,
 			});
 		},
+		getLeave: (params?: object) => {
+			return request({
+				url: '/api/details/page/leave',
+				method: 'get',
+				params,
+			});
+		},
 		addLeave: (data: object) => {
 			return request({
 				url: '/api/details/add/leave',

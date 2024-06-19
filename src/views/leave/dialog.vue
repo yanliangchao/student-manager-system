@@ -20,7 +20,7 @@
 							<el-date-picker v-model="state.ruleForm.times" type="datetime" format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DDTHH:mm:ss.000Z" placeholder="Select date and time"/>
 						</el-form-item> -->
 						<el-form-item label="时间" prop="times">
-                            <el-date-picker v-model="state.ruleForm.times" type="daterange" unlink-panels range-separator="To" start-placeholder="Start date" end-placeholder="End date" size="small" />
+                            <el-date-picker v-model="state.ruleForm.times" type="datetimerange" range-separator="To" start-placeholder="Start date" format="YYYY-MM-DD HH:mm:ss" date-format="YYYY/MM/DD ddd" time-format="A hh:mm:ss" end-placeholder="End date" />
                         </el-form-item>
 					</el-col>
 					<!-- <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
